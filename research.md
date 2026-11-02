@@ -161,7 +161,7 @@ Caveats: these are one author's test results and preferences, using his own reci
 - **Assumption (Agent, not evidence):** The control's formula has these natural levers: butter, granulated sugar, brown sugar, flour, egg, baking soda. Salt and vanilla probably stay fixed.
 - **Decision (Developer, 2026-11-02): MVP scope.**
   - **Ratio controls:** flour : butter, white : brown sugar split, egg white : yolk.
-  - **Substitutions:** baking powder for some of the baking soda, corn syrup for some of the sugar, **butter → vegetable oil**, and nothing else. Egg substitutes (applesauce, flax) were considered and cut, see below.
+  - **Substitutions:** corn syrup for some of the sugar and **butter → vegetable oil**, and nothing else. (Baking powder for some of the baking soda was cut on 2026-11-02, see below.) Egg substitutes (applesauce, flax) were considered and cut, see below.
   - **Cut from the MVP:** bread flour for some of the flour, and egg substitution (Developer, 2026-11-02: focus on butter → oil only). Butter state (melted, creamed) and dough or oven temperature stay stretch goals. Baking soda amount stays fixed at 6 g.
   - **Open:** None for the MVP.
 
@@ -195,7 +195,7 @@ Caveats: these are one author's test results and preferences, using his own reci
 
 - **Source says (ISU):** Margarine may spread more. Shortening gives higher rise and keeps shape. Vegetable oil gives denser, flatter cookies.
 - **Source says (SE):** Bread flour for chew, cake flour for softness. Baking powder for cakier. Corn syrup for softer, wider. Two whites instead of a whole egg's yolk for taller. Shortening for softer, denser.
-- **Open:** Honey or other sweeteners are not sourced.
+- **Open:** Honey or other sweeteners are not sourced. Amounts for the three MVP substitutions are in the next section.
 
 #### Butter → vegetable oil
 
@@ -206,6 +206,38 @@ Caveats: these are one author's test results and preferences, using his own reci
 - **Assumption (Agent):** Oil adds no water or milk solids, so by analogy with SE's browned-butter result it should mean less gluten, less browning flavor and a softer, flatter cookie. No source read tests this in chocolate chip cookies.
 - **Gap:** No controlled measurement of oil vs. butter spread in cookies. Predictions should carry a low-confidence label.
 
+#### Amounts for the three MVP substitutions (researched 2026-11-02)
+
+Search results were mostly low-quality recipe and SEO sites. Only pages the Agent read directly are cited. KA = King Arthur Baking, ATK = America's Test Kitchen.
+
+**Butter → vegetable oil**
+- **Source says (ATK, ["Chewy, Cakey, or Thin and Crispy"](https://www.americastestkitchen.com/lessons/articles/2363-chewy-cakey-or-thin-and-crispy-how-to-manipulate-texture), no author or date on page):** For chewy cookies, aim for about **3 : 1 unsaturated (oil) to saturated (butter) fat**. Melted butter also helps develop gluten for chew. This is the only amount for oil in cookies found on a reputable page, and it is a ratio of fats, not a weight conversion.
+- **Source says (Milk Street, [article](https://www.177milkstreet.com/2019/04/when-can-you-substitute-oil-for-butter), April 2019, no author):** Butter is about 16% water and oil has none, so scale oil back "to prevent greasiness". Oil "cannot trap and hold air the way softened butter can," so it is not suitable for creamed recipes. Melted-butter cookies have "a bit more wiggle room." No conversion number.
+- **Source says (KA, ["Cookie chemistry"](https://www.kingarthurbaking.com/blog/2015/07/09/cookie-chemistry), PJ Hamel, 2015):** In a sugar cookie test with equal-volume swaps, oil-based cookies were tender and crumbly but greasy, and "tasted like old cooking oil". Butter was best for flavor.
+- **Source says (KA oil search summary, cakes, not read in full):** Swapping about 25% of the butter by volume for oil keeps cakes moist. Cakes, not cookies.
+- **Derived (Agent):** SE gives butter as 80–83% fat. Replacing butter with oil by fat content gives about 0.8 × the butter weight (about 181 g of oil for the control's 226 g). Blogs say ¾ (about 170 g). Both come from the water content argument, but no reputable page states a cookie conversion.
+- **Implication for the model:** The control creams butter, and Milk Street says oil cannot replace creamed butter's air. ATK's 3 : 1 ratio (75% oil) is the only evidence for a large oil share. A **partial swap is better supported than a full one**. The supported range should probably stop below 100% oil, and a full swap should trigger the out-of-range warning.
+
+**Corn syrup for some of the sugar**
+- **Source says (SE Fact 9):** Replacing about 10% of the sugar (by weight: 1 oz of 10 oz total sugar, taken from the granulated sugar) changes texture completely. Wide, flat, soft and flexible cookies, darker color.
+- **Source says (KA, ["Corn syrup in recipes"](https://www.kingarthurbaking.com/blog/2018/09/24/corn-syrup-question), Susan Reid, Sept 24, 2018):** An invert sugar that gives a "bendy and chewy" texture, and "prevent[s] grains of sugar from recrystallizing when the cookie cools, making it less brittle." Overbaking still gives a crisp cookie. For a crisp edge and bendy center, add about **1 tablespoon** of invert sugar to a recipe. It gives no replacement ratio and does not mention spread.
+- **Source says (ATK, as above):** Liquid sweeteners such as corn syrup or molasses hold moisture more than brown sugar. Too much makes a cookie "too moist" (cakey end).
+- **Derived (Agent):** SE's 10% of the control's 315 g of sugar is about 31 g. KA's 1 tbsp is a smaller, separate figure. Both are small shifts. Corn syrup's weight per tablespoon is not sourced.
+- **Gap:** No source gives a ceiling. Corn syrup also moves spread (SE: wider), so the model needs a cap.
+
+**Baking powder for some of the baking soda**
+- **Source says (KA, ["What's the difference between baking soda and baking powder?"](https://www.kingarthurbaking.com/blog/2021/09/10/baking-soda-vs-baking-powder-substitutions), Justine Lee, Sept 10, 2021; also [Bob's Red Mill](https://www.bobsredmill.com/articles/making-cookies-without-baking-soda), Aug 8, 2018):** A full swap uses **3 times** as much baking powder as soda by volume (3 tsp powder for 1 tsp soda). KA warns of a "slightly bitter, off-putting taste" and says substitutes "won't perform absolutely the same." Neither gives cookie spread numbers.
+- **Source says (ATK):** Soda **plus** baking powder together is recommended for chewy cookies ("ensures that the cookie rises"). Baking powder alone, or more powder than soda, gives cakey cookies. **Extra baking soda** "helps dry out a cookie, giving it crispness."
+- **Source says (SE Fact 10):** Powder gives cakier, higher-rising cookies with smooth tops. Soda gives craggier, denser cookies and faster browning, because alkaline conditions speed the Maillard reaction.
+- **Conflict:** Bob's Red Mill says soda gives a "coarse, chewy" texture and powder a "light, fine" one. ATK says a soda-and-powder mix is chewiest. SE says soda is denser and craggier. All agree powder moves toward cakey, so a small amount of powder is the supported direction.
+- **Gap:** No source gives a partial-swap amount. The 3 : 1 rule applies to a full swap only. A partial swap of x tsp soda → 3x tsp powder is an Agent derivation, not evidence. The control's acidic brown sugar also reacts with soda (SE), so the swap changes more than lift.
+- **Slider note (ATK):** "extra baking soda → crisper" is a sourced direction for the thin-and-crispy end, but the sources give no amount. Not part of the approved slider group (Developer decision above).
+
+**Amounts evidence for the slider and ranges (KA, ["Cookie science"](https://www.kingarthurbaking.com/blog/2016/12/21/cookie-science), Gwen Adams, Dec 21, 2016):**
+- Adding **2 tbsp granulated sugar** gives a crispier, more spread cookie (bake 2–4 min longer). Adding **2 tbsp brown sugar** gives a moist, chewy cookie. KA tested these as changes to one chocolate chip cookie recipe.
+- **Derived:** 2 tbsp is about 25 g granulated or 27 g brown sugar at KA's chart weights (198 and 213 g per cup). That is about 8% of the control's 315 g of sugar, a sourced size of shift for the sugar split.
+- **ATK on eggs:** More yolks than whites gives chewier cookies, and a small amount of egg or just yolk gives thin, crispy ones. This supports the slider moving yolk share, but ATK gives no amounts.
+
 #### Egg → applesauce and other egg substitutes (cut from the MVP; kept as research for later)
 
 - **Role of eggs (SE):** Other than the small amount in butter, eggs are the main water source in the dough. Whites supply water and protein and give rise and height. Yolks supply fat and tenderness. ISU: egg proteins set and shape the cookie. Iowa State's egg article says eggs in cookies are "mainly for binding."
@@ -215,6 +247,51 @@ Caveats: these are one author's test results and preferences, using his own reci
 - **Unverified (blog tests found by search, not read directly):** Applesauce cookies are softer, puffier and more cake-like, "like a muffin top". Flax cookies stay soft longer. A commercial replacer matched the egg cookie but was slightly gray. Treat as anecdotes.
 - **Gap:** No source tests applesauce, or any egg substitute, in a chocolate chip cookie with measurements. The extension sources describe the egg's function (moisture, binding, leavening) and which substitute covers which function. A prediction can follow from that mapping: applesauce replaces water but not structure or rise, so the likely effect is a softer, less set, cakier-or-denser cookie. This is an inference from function, not a tested result, and should carry a low-confidence label.
 - **Decision (Developer, 2026-11-02):** Egg substitution is cut from the MVP. Butter → oil is the only substitution besides the corn syrup and baking powder swaps. Egg substitutes can return as a stretch goal if the model is stable.
+
+### Broad research round (2026-11-02, draft, not yet reviewed by Developer)
+
+Goal: learn what is known about chocolate chip cookie science before fixing amounts, ranges and the prediction format. Evidence tiers: **A** = peer-reviewed or journal, **B** = tested by a named test kitchen or extension, **C** = student projects, trade articles, informal blog tests. "Summary" = the Agent saw only a search summary or abstract, not the full text.
+
+**Measured findings (what has numbers)**
+
+| Variable | Finding | Tier | Read how |
+|---|---|---|---|
+| Sugar level | In sugar-snap cookies, more sugar (17.6 → 31.2%) gave larger diameter and lower height. Sucrose delays gluten setting, so the dough keeps spreading longer. Pareyt et al., *J. Food Eng.* (2009) and a related *Cereal Chem.* abstract. | A | Summary |
+| Fat level | More fat (8.7 → 15.8%) gave larger diameter, lower height, more porosity. Less fat gave harder, more elastic dough (more gluten entanglement). | A | Summary |
+| Sugar type | UBC student test: white sugar gave the widest, flattest cookies, dark brown the smallest and tallest (ANOVA p = 0.00001). **A 2019 *Processes* study reports the opposite** (dark brown sugar replacing sucrose increased diameter and decreased thickness). | C and A | Student study abstract read; *Processes* summary only |
+| Flour type | UBC student test: bread flour spread least, cake flour most. Literature summary: flour protein correlates negatively with spread, but damaged starch and water retention often predict it better. | C, A | Student abstract read; literature summary |
+| Flour amount | Chef test, each ingredient ±40% by weight: less flour gave the most spread and crispier cookies. More flour gave less spread and a cake-like texture. Flour had the largest effect; leavening the smallest; egg barely changed spread. | C | Read directly |
+| Dough chilling | KA test with chocolate chip dough: 30 min "makes a big difference" (less spread, chewier), later gains gradual, up to 10 days. UBC test of 13 chill times (0–240 min): longer chilling gave smaller cookies (p < 0.0001). | B, C | KA and UBC abstract read |
+| Fat type | Conflict: a 2006 study found oil-based cookies spread more and earlier than solid-fat cookies. A 2025 study of oil blends found a **reduced** spread ratio and firmer cookies (about 67 N vs. up to 90 N) than bakery fat. A Utah State thesis found butter, margarine and soybean oil similar, and shortening lower. Fat type was **not** measured in Mamat & Hill (2014). | A | Summaries; Mamat & Hill read |
+| Leavening | Trade article: more bicarbonate gives more height, less spread, more browning (higher pH). ISU says soda raises pH and can increase spread. Chef test: less leavening gave more spread. | C | Summaries |
+| Egg yolk share | One Indonesian study: more yolk gave higher spread ratio and breaking strength. SE, ATK: more yolk gives fudgier, chewier cookies. Chef test: egg amount barely changed spread. | A, B, C | Summary |
+
+**Mechanism for crisp vs. chewy (the slider)**
+- Crisp or soft is a **water and sugar-state** question. Granulated sugar recrystallizes as the cookie cools, giving a crisp texture. Invert sugars (brown sugar, corn syrup, honey) interfere with recrystallization and hold water, so cookies stay bendy and chewy (KA, ATK; McGee excerpts).
+- Lower water activity gives crisp textures and higher gives soft, chewy ones (vendor and food-science summaries, tier C).
+- **Bake time confounds texture.** KA: overbaking gives a crisp cookie even with invert sugar. A patent (Tier C) adds that cookies lose their crisp-chewy contrast with storage as moisture and sugar equalize.
+
+**What this changes**
+1. **Oil's effect on spread is not settled.** Sources split. Texture claims (denser, chewier, tender, greasy at high amounts) are more consistent.
+2. **Egg ratio's effect on spread is weak or conflicting.** Texture (fudgier, chewier) has two B-tier sources.
+3. **Baking soda amount is uncertain in both directions** (more height and less spread vs. higher pH and more spread). Keeping it fixed at 6 g is supported.
+4. **Brown sugar → less spread** has SE, ISU and one student study. One 2019 study disagrees. Unread, so a medium-confidence direction.
+5. **Chilling is the best-evidenced variable not in the MVP** (three independent sources, two measured). The model assumes dough is baked right after mixing, and the site should say so.
+
+### Recommendations (Agent) and Developer decisions
+
+**Decision (Developer, 2026-11-02):** Accepted recommendations 1, 2, 4, 5, 7 and 8 as drafted. **Baking powder cut (recommendation 6):** it only makes sense in a recipe without brown sugar. The control's soda reacts with brown sugar's acid (SE Fact 8), so baking powder isn't needed. Recommendation 3 (flour : butter) is still open. The recommendations are kept below as written.
+
+1. **Prediction format (Q6):** Show direction (more, less, about the same) per quality, with a three-level label tied to the evidence: **Well supported** (two or more independent sources agree: more white sugar → wider and crisper, more flour → less spread, chilling → less spread), **Likely** (one source or small studies: brown sugar and corn syrup effects on chewiness), **Uncertain** (sources conflict: oil on spread, egg ratio on spread). No numeric scores. This shows the limits the pitch promised.
+2. **Ranges (Q5):** Use about **±25% of each control weight** for flour, butter and sugars as the supported range, with a warning outside. It matches the peer-reviewed formula ranges (sugar and fat about ±28%) and sits inside the chef test's ±40%, which produced edible cookies. State it as a design choice, not a finding.
+3. **Flour : butter is the tightest variable.** The control is 1.27 : 1 and SE's doughy threshold is 1.3 : 1. The slider's dense end can't move flour : butter much. Either let the sugar split and yolk share carry the dense side, or move butter down at the same time. This needs a decision.
+4. **Butter → oil:** Allow a partial swap, capped at 75% of the fat as oil (ATK's 3 : 1). Convert by fat content (about 0.8 × the butter weight for the oil share). Label texture "denser, chewier" **Likely**, spread **Uncertain**, and warn above the cap.
+5. **Corn syrup:** Cap at about 10% of the sugar weight (SE tested 10%, KA suggests about 1 tbsp). Label chewiness **Likely** and spread **Uncertain**. SE says wider, and KA does not mention spread.
+6. **Baking powder:** The evidence is weakest here. The 3 : 1 rule covers only a full swap. I recommend one of: (a) keep it as an *addition* with the soda unchanged, labeled as a design-choice amount and Uncertain, or (b) **drop it from the MVP** and keep the cakey end out of the slider anyway. This is the most cuttable item.
+7. **State assumptions on the site:** Baked at 375°F for the control's time, dough baked right after mixing, eaten the same day. The model's texture claims depend on all three.
+8. **Run test bakes before Phase 3 locks the rules:** Control, sugar split ±25 g, flour ±10%, and an oil batch (50% and 75%). Measure diameter and thickness. It would settle the conflicts above, and the photographs also serve stretch goal 5.
+
+**To verify directly (only summaries seen):** Pareyt et al. 2009 and 2010; the 2019 *Processes* brown sugar study; the 2025 oil-blend study; the Indonesian egg-yolk study; the chilling-time UBC means (6.8 → 5.3 cm was reported in a search summary only).
 
 ### Question 5: Where does the model stop being reliable?
 
@@ -262,6 +339,7 @@ Note: the sources so far already cover butter state and chilling qualitatively, 
 
 Record consequential changes to the approved scope: what changed, why, and what was added or cut. Update `spec.md` when a change alters the intended behavior.
 
+- **2026-11-02, baking powder cut:** Baking powder for baking soda was removed from the MVP substitutions. Why: the control already has the acid it needs (brown sugar), so powder is only useful in a recipe without brown sugar, and the evidence for amounts was the weakest of the three substitutions. The MVP substitutions are now corn syrup and butter → oil.
 - **2026-11-02, slider axis:** The pitch says the texture control moves toward "cakier or crispier". The Developer meant chewy, and the scale is **dense and chewy ↔ thin and crispy**. Research and the spec use that axis. The pitch text stays as written because it is locked after approval. Ask the Studio director whether to note the correction.
 - **2026-11-02, MVP variables:** The pitch said "a supported substitution" and "a limited group of common ingredients" without naming them. The MVP now has three ratio controls (flour : butter, sugar split, egg white : yolk) and three substitutions (baking powder for some soda, corn syrup for some sugar, butter → oil). Cut: bread flour and egg substitutes (applesauce, flax). Why: each included variable has a sourced direction, and egg substitutes had no source testing them in cookies. Egg substitutes moved to the stretch goals. The pitch is not edited, since it is locked after approval.
 
@@ -282,4 +360,8 @@ Record consequential changes to the approved scope: what changed, why, and what 
 | [University of Maine Cooperative Extension, "Using Egg Substitutes in Baking and Cooking"](https://extension.umaine.edu/food-health/2023/02/16/using-egg-substitutes-in-baking-and-cooking/), Kate McCarty, Feb 16, 2023 | Research (read) | Applesauce and other egg substitutes | Cite; no text reproduced. Terms not checked. |
 | [Iowa State University Extension, Spend Smart. Eat Smart., "Baking without eggs, part 2"](https://spendsmart.extension.iastate.edu/spendsmart/2025/03/10/baking-without-eggs-part-2/), Justine Hoover, Mar 10, 2025 | Research (read) | Flax eggs | Cite; no text reproduced. Terms not checked. |
 | [Chen, Chen, Bevanda and Wu, "Effect of different edible fats on the spread ratio of sugar cookies," *The Expedition* 13 (2022)](https://ojs.library.ubc.ca/index.php/expedition/article/view/197326) | Research (abstract only) | Fat substitutes and spread | Cite; undergraduate study, no numbers read. |
+| [King Arthur Baking: "Corn syrup in recipes"](https://www.kingarthurbaking.com/blog/2018/09/24/corn-syrup-question) (Susan Reid, 2018); ["Cookie science"](https://www.kingarthurbaking.com/blog/2016/12/21/cookie-science) (Gwen Adams, 2016); ["Cookie chemistry"](https://www.kingarthurbaking.com/blog/2015/07/09/cookie-chemistry) (PJ Hamel, 2015); ["What's the difference between baking soda and baking powder?"](https://www.kingarthurbaking.com/blog/2021/09/10/baking-soda-vs-baking-powder-substitutions) (Justine Lee, 2021) | Research (read) | Substitution amounts and effects | Cite; no text reproduced. Terms not checked. |
+| [America's Test Kitchen, "Chewy, Cakey, or Thin and Crispy: How to Manipulate Texture"](https://www.americastestkitchen.com/lessons/articles/2363-chewy-cakey-or-thin-and-crispy-how-to-manipulate-texture) (no author or date on page) | Research (read) | Slider variables, fat ratio | Cite; no text reproduced. Terms not checked. |
+| [Milk Street, "When can you substitute oil for butter?"](https://www.177milkstreet.com/2019/04/when-can-you-substitute-oil-for-butter) (April 2019) | Research (read) | Oil vs. butter | Cite; no text reproduced. |
+| [Bob's Red Mill, "Making cookies without baking soda"](https://www.bobsredmill.com/articles/making-cookies-without-baking-soda) (Aug 8, 2018) | Research (read) | Soda to powder ratio | Cite; no text reproduced. |
 | Vite | Code (planned) | Dev server and build | MIT, to confirm when installed. |
