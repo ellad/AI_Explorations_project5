@@ -159,21 +159,62 @@ Caveats: these are one author's test results and preferences, using his own reci
 ### Question 2: Which variables go in the MVP?
 
 - **Assumption (Agent, not evidence):** The control's formula has these natural levers: butter, granulated sugar, brown sugar, flour, egg, baking soda. Salt and vanilla probably stay fixed.
-- **Decision:** _pending Developer._
+- **Decision (Developer, 2026-11-02): MVP scope.**
+  - **Ratio controls:** flour : butter, white : brown sugar split, egg white : yolk.
+  - **Substitutions:** baking powder for some of the baking soda, corn syrup for some of the sugar, **butter → vegetable oil**, and nothing else. Egg substitutes (applesauce, flax) were considered and cut, see below.
+  - **Cut from the MVP:** bread flour for some of the flour, and egg substitution (Developer, 2026-11-02: focus on butter → oil only). Butter state (melted, creamed) and dough or oven temperature stay stretch goals. Baking soda amount stays fixed at 6 g.
+  - **Open:** None for the MVP.
 
-### Question 3: Texture slider (cakier ↔ crispier)
+### Question 3: Texture slider (dense and chewy ↔ thin and crispy)
 
-- **Source says:** Cakier is linked to creamed butter, baking powder, chilled dough, and more flour or egg white. Crispier is linked to more white sugar, more butter, and finer or thinner dough. Chewier is linked to melted butter, brown sugar, and higher-protein flour. (Compiled from the sources above.)
-- **Source says (SE):** Cakier: baking powder, more brown sugar, extra egg white, more flour. Wide and crisp: white sugar, less flour, cooler oven, warm dough. Chewy: bread flour, melted butter, corn syrup. Note SE links brown sugar to *cakier*, not chewier.
-- **Gap:** "Crispy ↔ cakey" and "chewy" are different axes in these sources. The pitch has one cakier-to-crispier slider, so the Developer needs to decide where chewy fits.
-- **Decision:** _pending Developer._
+- **Decision (Developer, 2026-11-02):** The slider runs from **dense and chewy** to **thin and crispy**. The pitch says "cakier or crispier" in three places (concept, experience goals, MVP), but the Developer meant chewy. The pitch is not edited here (see Scope changes). This also resolves the earlier gap about where chewy fits: it is one end of the slider, and thickness is part of the same axis.
+- **Why this works with the sources:** Sources describe two linked changes. Spread (wide and thin vs. compact and thick) and moisture (crisp vs. chewy). Granulated sugar, less flour and more butter give wide, thin, crisp cookies. Brown sugar, melted butter and more flour give compact, moist, dense cookies. "Cakey" (baking powder, extra whites, creamed butter) means tall and open-crumbed, which is a third direction and is *not* either end of this slider.
+- **Source says, toward dense and chewy:**
+  - Brown sugar: tall and moist, rises more through its acid reaction with the soda, which limits spread, and holds water (SE Fact 8, ISU). Kansas State via ISU: darker sugars make cookies chewier.
+  - Melted butter: "squatter, denser" and "chewier" (SE Fact 2, ISU). Vegetable oil: "denser and flatter" (ISU).
+  - More flour relative to butter: barely spreads, dense and doughy at ≥ 1.3 : 1 (SE Fact 12).
+  - Egg yolks: denser, fudgier, brownie-like (SE Fact 5).
+- **Source says, toward thin and crispy:**
+  - Granulated sugar: thin, crisp, wide-spreading, gives up moisture more readily (SE Fact 8, ISU).
+  - Less flour relative to butter: lacy, wafer-like at ≤ 1 : 1 (SE Fact 12).
+  - More butter: more spread and tenderness (SE Fact 1). Cooler oven gives wider, flatter cookies (SE Fact 18), though oven temperature is not an MVP variable.
+- **Variables that break the single axis:**
+  - **Corn syrup:** SE says it gives "wide, flat" cookies that are soft and chewy. That is thin *and* chewy, so it moves chewiness one way and thickness the other. The slider cannot move it without contradicting itself, so keep it as a separate substitution, not part of the slider group.
+  - **Vegetable oil:** ISU says denser *and* flatter. Same issue, so also a separate substitution.
+  - **Baking powder, extra egg white, creamed butter:** move toward cakey, so they stay as independent controls.
+- **Resolved conflict:** SE called brown sugar "cakier" and ISU/Kansas State called it chewier. Both fit: brown sugar adds rise and holds moisture, so it moves toward the dense, chewy end and away from the thin, crispy end.
+- **Decision (Developer, 2026-11-02): Slider group.** The slider moves the sugar split (more brown ↔ more white), flour : butter (higher ↔ lower), and egg yolk share (more yolk ↔ less yolk) together. Each has a sourced direction. No source gives amounts, so the size of each shift is a design choice and must be labeled as one.
+- **Decision (Developer, 2026-11-02): Control position.** The Toll House control sits at the **middle** of the slider.
+- **Model implication:** The model should still report separate qualities (spread, thickness, moisture, browning, crispness, chewiness) because the corn syrup and oil cases show they can move independently. The slider is a shortcut that moves several of them together.
+- **Open:**
+  1. Which variables the slider moves, and how far. The flour : butter range runs from lacy to doughy, so the slider's limits need a bound inside it.
+  2. Whether the middle position holds up against test bakes (the control may not actually sit in the middle of the real texture range).
+  3. Egg yolk share: the control has a natural 1 : 1 white to yolk, and the slider moving it needs bounds. SE found 1 : 1 best, so the slider may move it only a little.
 
 ### Question 4: Supported substitutions
 
 - **Source says (ISU):** Margarine may spread more. Shortening gives higher rise and keeps shape. Vegetable oil gives denser, flatter cookies.
 - **Source says (SE):** Bread flour for chew, cake flour for softness. Baking powder for cakier. Corn syrup for softer, wider. Two whites instead of a whole egg's yolk for taller. Shortening for softer, denser.
-- **Open:** Oil has ISU support only. Honey or other sweeteners are not sourced.
-- **Decision:** _pending Developer._
+- **Open:** Honey or other sweeteners are not sourced.
+
+#### Butter → vegetable oil
+
+- **Source says (ISU):** Vegetable oil gives cookies that are "denser and flatter."
+- **Source says (SE):** Butter is about 80–83% butterfat, 15% water and 3–5% milk protein. Water in butter helps gluten form. Browned butter, which has lost its water, gave softer, more tender cookies and left sugar undissolved. Butter's milk proteins add browning and flavor, and substituting less flavorful fats gave "sub-par" cookies.
+- **Source says (UBC student study, [Chen et al., *The Expedition* 13, 2022](https://ojs.library.ubc.ca/index.php/expedition/article/view/197326)):** In sugar cookies, spread differed significantly between butter and coconut oil, avocado oil and peanut butter, but not between butter and lard. The Agent read only the abstract, so there are no numbers, and it is an undergraduate journal.
+- **Unverified (blog and search-summary claims, not read directly):** Oil gives more spread and chewier cookies. A common conversion is about ¾ the butter amount, because butter is about 80% fat. The conversion is consistent with SE's butterfat figure.
+- **Assumption (Agent):** Oil adds no water or milk solids, so by analogy with SE's browned-butter result it should mean less gluten, less browning flavor and a softer, flatter cookie. No source read tests this in chocolate chip cookies.
+- **Gap:** No controlled measurement of oil vs. butter spread in cookies. Predictions should carry a low-confidence label.
+
+#### Egg → applesauce and other egg substitutes (cut from the MVP; kept as research for later)
+
+- **Role of eggs (SE):** Other than the small amount in butter, eggs are the main water source in the dough. Whites supply water and protein and give rise and height. Yolks supply fat and tenderness. ISU: egg proteins set and shape the cookie. Iowa State's egg article says eggs in cookies are "mainly for binding."
+- **Applesauce:** ¼ cup replaces 1 egg ([Illinois Extension](https://extension.illinois.edu/blogs/live-well-eat-well/2023-02-10-egg-substitutes-when-baking), 2023, and [University of Maine Extension](https://extension.umaine.edu/food-health/2023/02/16/using-egg-substitutes-in-baking-and-cooking/), 2023). Illinois classes it as a **moisture** replacement, not a leavening one. Maine says it "doesn't provide as much leavening as other options," "affects flavor and texture," and is best in quickbreads. Maine tested substitutes in a yellow cake, not cookies.
+- **Flax egg:** 1 tbsp ground flax + 3 tbsp water replaces 1 egg as a **binder** (Illinois, Maine, [Iowa State](https://spendsmart.extension.iastate.edu/spendsmart/2025/03/10/baking-without-eggs-part-2/), 2025). Illinois adds ½ tsp baking powder when lift is needed, as in cookies. Iowa State tested flax eggs in oatmeal bars (not chocolate chip cookies) and said they turned out well.
+- **Other (single extension sources):** ¼ cup commercial egg substitute or 2 egg whites per egg (Illinois), ¼ cup seltzer per egg for best texture in a yellow cake (Maine).
+- **Unverified (blog tests found by search, not read directly):** Applesauce cookies are softer, puffier and more cake-like, "like a muffin top". Flax cookies stay soft longer. A commercial replacer matched the egg cookie but was slightly gray. Treat as anecdotes.
+- **Gap:** No source tests applesauce, or any egg substitute, in a chocolate chip cookie with measurements. The extension sources describe the egg's function (moisture, binding, leavening) and which substitute covers which function. A prediction can follow from that mapping: applesauce replaces water but not structure or rise, so the likely effect is a softer, less set, cakier-or-denser cookie. This is an inference from function, not a tested result, and should carry a low-confidence label.
+- **Decision (Developer, 2026-11-02):** Egg substitution is cut from the MVP. Butter → oil is the only substitution besides the corn syrup and baking powder swaps. Egg substitutes can return as a stretch goal if the model is stable.
 
 ### Question 5: Where does the model stop being reliable?
 
@@ -212,13 +253,17 @@ From the approved pitch, in pitch order (Developer to reprioritize):
 3. Save or export a modified recipe.
 4. Side-by-side history of experiments.
 5. Photographs from real test batches.
-6. Another cookie style or baked good with its own researched model.
+6. Egg substitutes (applesauce, flax; research above), added 2026-11-02 after being cut from the MVP.
+7. Another cookie style or baked good with its own researched model.
 
 Note: the sources so far already cover butter state and chilling qualitatively, so goals 1–2 may be cheaper than expected. Whether they join the MVP is the Developer's call.
 
 ### Scope changes
 
 Record consequential changes to the approved scope: what changed, why, and what was added or cut. Update `spec.md` when a change alters the intended behavior.
+
+- **2026-11-02, slider axis:** The pitch says the texture control moves toward "cakier or crispier". The Developer meant chewy, and the scale is **dense and chewy ↔ thin and crispy**. Research and the spec use that axis. The pitch text stays as written because it is locked after approval. Ask the Studio director whether to note the correction.
+- **2026-11-02, MVP variables:** The pitch said "a supported substitution" and "a limited group of common ingredients" without naming them. The MVP now has three ratio controls (flour : butter, sugar split, egg white : yolk) and three substitutions (baking powder for some soda, corn syrup for some sugar, butter → oil). Cut: bread flour and egg substitutes (applesauce, flax). Why: each included variable has a sourced direction, and egg substitutes had no source testing them in cookies. Egg substitutes moved to the stretch goals. The pitch is not edited, since it is locked after approval.
 
 ## Sources and credits
 
@@ -233,4 +278,8 @@ Record consequential changes to the approved scope: what changed, why, and what 
 | [King Arthur Baking, Ingredient Weight Chart](https://www.kingarthurbaking.com/learn/ingredient-weight-chart) | Reference data | Cup/spoon-to-gram conversions | Cite; values are facts, no text reproduced. Site terms not yet checked. |
 | [2 Food Trippers, "Toll House Chocolate Chip Cookie Recipe by Weight"](https://www.2foodtrippers.com/toll-house-chocolate-chip-cookie-recipe-by-weight/) (Daryl and Mindi Hirsch, Mar 22, 2024) | Reference data | Cross-check of gram weights incl. baking soda, salt, vanilla | Weights are facts; credit if used. Terms not checked. |
 | [Cooking for Engineers, Nestlé Toll House Chocolate Chip Cookies](https://app.cookingforengineers.com/recipe/185/Nestle-Toll-House-Chocolate-Chip-Cookies/trn) (Michael Chu) | Reference data | Cross-check of gram weights | Flour amount differs from the current recipe, so not used for flour. Terms not checked. |
+| [Illinois Extension, "Egg substitutes when baking"](https://extension.illinois.edu/blogs/live-well-eat-well/2023-02-10-egg-substitutes-when-baking), Kristin Bogdonas, Feb 10, 2023 | Research (read) | Egg substitutes by function | Cite; no text reproduced. Terms not checked. |
+| [University of Maine Cooperative Extension, "Using Egg Substitutes in Baking and Cooking"](https://extension.umaine.edu/food-health/2023/02/16/using-egg-substitutes-in-baking-and-cooking/), Kate McCarty, Feb 16, 2023 | Research (read) | Applesauce and other egg substitutes | Cite; no text reproduced. Terms not checked. |
+| [Iowa State University Extension, Spend Smart. Eat Smart., "Baking without eggs, part 2"](https://spendsmart.extension.iastate.edu/spendsmart/2025/03/10/baking-without-eggs-part-2/), Justine Hoover, Mar 10, 2025 | Research (read) | Flax eggs | Cite; no text reproduced. Terms not checked. |
+| [Chen, Chen, Bevanda and Wu, "Effect of different edible fats on the spread ratio of sugar cookies," *The Expedition* 13 (2022)](https://ojs.library.ubc.ca/index.php/expedition/article/view/197326) | Research (abstract only) | Fat substitutes and spread | Cite; undergraduate study, no numbers read. |
 | Vite | Code (planned) | Dev server and build | MIT, to confirm when installed. |
