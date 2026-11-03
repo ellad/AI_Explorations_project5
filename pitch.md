@@ -48,7 +48,7 @@ Keep this section to about 1,000 words.
 
 ### Concept
 
-**Half Baked** is an interactive website that helps home bakers understand the food science behind a recipe. A base chocolate-chip cookie recipe will load automatically, and users can move a texture control toward a cakier or crispier cookie to see which parts of the formula change. They can then experiment with individual ingredient substitutions and ratios before trying the changes themselves. The site will show how a change is likely to affect qualities such as spread, thickness, moisture, browning, crispness, and chewiness. It will also explain why those effects are expected instead of only showing a result.
+**Half Baked** is an interactive website that helps home bakers understand the food science behind a recipe. A base chocolate-chip cookie recipe will load automatically, and users can move a texture control toward a denser and chewier or a thinner and crispier cookie to see which parts of the formula change. They can then experiment with individual ingredient substitutions and ratios before trying the changes themselves. The site will show how a change is likely to affect qualities such as spread, thickness, moisture, browning, crispness, and chewiness. It will also explain why those effects are expected instead of only showing a result.
 
 The website will not claim that it can perfectly simulate baking. Ingredients and techniques can affect each other in complicated ways, so the site will only make predictions for changes that I have researched and that fall within a supported range.
 
@@ -66,7 +66,7 @@ The main audience is home bakers who have some experience but want to learn more
 
 ### Experience goals
 
-I want users to feel curious and more confident about experimenting. The base recipe should be ready as soon as they enter the experiment. A simple texture control will let them start by moving the cookie toward cakier or crispier and seeing the connected ratio changes. They can then learn what each ingredient does, try a substitution or adjust a ratio, and compare their version with the original. Ratios will appear by default so users can focus on how ingredients relate. After choosing how many cookies they want, they can see the measurements for that yield. By the end, they should understand what may change and why.
+I want users to feel curious and more confident about experimenting. The base recipe should be ready as soon as they enter the experiment. A simple texture control will let them start by moving the cookie toward denser and chewier or thinner and crispier and seeing the connected ratio changes. They can then learn what each ingredient does, try a substitution or adjust a ratio, and compare their version with the original. Ratios will appear by default so users can focus on how ingredients relate. After choosing how many cookies they want, they can see the measurements for that yield. By the end, they should understand what may change and why.
 
 ### Technical goals
 
@@ -82,7 +82,7 @@ I will use HTML, CSS, and JavaScript to build the website, with Vite providing t
 
 ### MVP or critical function
 
-The MVP will focus on one base chocolate-chip cookie recipe that loads automatically and a limited group of common ingredients. Users will first be able to move a texture control toward cakier or crispier and see the related ratios change together. They will also be able to choose a supported substitution or adjust an individual ingredient ratio within a researched range. The site will then show the likely effects on the cookie, explain the most important changes, and warn the user if the experiment goes outside the model's limits.
+The MVP will focus on one base chocolate-chip cookie recipe that loads automatically and a limited group of common ingredients. Users will first be able to move a texture control toward denser and chewier or thinner and crispier and see the related ratios change together. They will also be able to choose a supported substitution or adjust an individual ingredient ratio within a researched range. The site will then show the likely effects on the cookie, explain the most important changes, and warn the user if the experiment goes outside the model's limits.
 
 Ratios will appear first, and users will select a desired number of cookies to generate the corresponding ingredient measurements. The most important function to test during Phase 2 is whether the rules can turn recipe changes into consistent and understandable predictions. I will test prepared examples, confirm that undoing a change returns to the original result, and make sure unsupported inputs produce a warning instead of a made-up prediction.
 
