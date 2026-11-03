@@ -4,3 +4,72 @@ Message:
 Complete Phase 1 ideation and pitch
 
 -----
+Commit: 536b8de417e2a691ae66c9ee2d568ce081302254
+Date: 2026-10-30T11:29:13-05:00
+Message:
+Export commit log and save transcript
+
+-----
+Commit: 0419fb558dc1330a08c5e70d06ed09357b6f08ea
+Date: 2026-11-02T16:56:41-06:00
+Message:
+Fill in research.md: sources, control recipe, and gram weights
+
+Record ingredient-effect findings (Iowa State Extension, Popular Science,
+Serious Eats), the Nestle Toll House control recipe without nuts, gram
+weights cross-checked across several sources, and open research questions.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+-----
+Commit: f955fed0210fc1a59b5b7e5f430f92794f24cc1e
+Date: 2026-11-02T17:06:36-06:00
+Message:
+Define MVP scope and texture slider in research.md
+
+Record MVP variables (flour:butter, sugar split, egg white:yolk; baking
+powder, corn syrup, butter-to-oil substitutions), cut egg substitution,
+add sourced findings on oil and egg substitutes, and set the texture
+slider as dense and chewy to thin and crispy.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+-----
+Commit: f0654e6c029a58e6a6623f97b11e029de979c3ca
+Date: 2026-11-02T17:20:16-06:00
+Message:
+Add broad cookie-science research and substitution amounts
+
+Record amounts for butter-to-oil and corn syrup substitutions, a broad
+review of cookie science with evidence tiers, and recommendations. Accept
+the recommendations and cut baking powder from the MVP.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+-----
+Commit: 29ff2dc60aac2c522c00c915c6056426b9efa025
+Date: 2026-11-02T17:54:52-06:00
+Message:
+Settle slider variables, sugar range, and prediction readouts
+
+Record recipe comparison across eight cookies, egg and baking soda slider
+evidence, and browning research. Egg (2 to 1) and baking soda (linked to
+brown sugar) join the slider, egg white to yolk stays 1:1, and browning is
+struck so the model reports three readouts.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+-----
+Commit: bda71899fe0a1f4cbdabb5be4e5e951c16b03bbb
+Date: 2026-11-02T18:02:49-06:00
+Message:
+Change slider wording in pitch and drop unverified peer-reviewed claims
+
+Replace "cakier or crispier" with "denser and chewier or thinner and
+crispier" in the pitch, on the Developer's instruction. Mark the Pareyt
+and Delcour claims as unverified and stop relying on them, and update the
+scope-changes log.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+-----
