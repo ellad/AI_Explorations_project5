@@ -409,12 +409,12 @@ The Developer asked for sources on the Maillard reaction, time and temperature, 
 
 - **Partly filled by SE:** It gives flour : butter reference points (≤ 1 for lacy, ≥ 1.3 for "barely spreads") and a 1 : 1 : 0.8 baseline. Nothing read gives limits for sugar, leavening or egg amounts, so supported ranges for those cannot be set from evidence yet.
 - **Options:** (a) Find a controlled study or tested recipe series with measured ratios. (b) Limit the range to ± a stated percentage of the control and say it is a design choice, not a finding. (c) Run test bakes and record results here.
-- **Decision:** _pending Developer._
+- **Decision (Developer, 2026-11-06):** Use **±25% of each control ingredient amount** as the model's supported range. If a User moves outside that range, show a brief statement that the model cannot reliably predict the result.
 
 ### Question 6: How to show predictions
 
 - **Evidence so far:** The sources give directions and a few ratios from one author's tests, not measured outcomes (no spread diameters or moisture values). Numeric scores would imply precision the sources do not support.
-- **Decision:** _pending Developer._
+- **Decision (Developer, 2026-11-06):** Clearly label the results as **predictions** based on information collected from recipes and food-science sources, and state that actual results will vary. Keep the three evidence labels proposed above: **Well supported**, **Likely**, and **Uncertain**.
 
 ### Source quality notes
 
@@ -452,6 +452,7 @@ Note: the sources so far already cover butter state and chilling qualitatively, 
 
 Record consequential changes to the approved scope: what changed, why, and what was added or cut. Update `spec.md` when a change alters the intended behavior.
 
+- **2026-11-06, ratio-first controls and yield:** The Developer directed that Users adjust flour-relative ratios instead of raw ingredient grams. Flour is fixed at `1.0`; the first working control adjusts the butter ratio. The control recipe is treated as 24 cookies at approximately 53.8 g of dough each. A selected yield scales all ingredients while preserving the formula ratios and estimated portion size. When ratios change, the model normalizes them across the target dough mass so yield remains consistent. A tablespoon or scoop-volume estimate is deferred because dough volume varies and no supported conversion has been established.
 - **2026-11-02, predicted qualities:** The pitch names six qualities (spread, thickness, moisture, browning, crispness, chewiness). The MVP reports three: spread and thickness (one measurement seen two ways), crisp ↔ chewy (two ends of the slider's axis), and moisture. Browning was struck because sources give direction only, no amounts, and oven time and temperature (which the model does not control) override recipe effects. Browning could return as a stretch goal if measured evidence turns up. The pitch is locked and not edited.
 - **2026-11-02, baking powder cut:** Baking powder for baking soda was removed from the MVP substitutions. Why: the control already has the acid it needs (brown sugar), so powder is only useful in a recipe without brown sugar, and the evidence for amounts was the weakest of the three substitutions. The MVP substitutions are now corn syrup and butter → oil.
 - **2026-11-02, slider axis:** The pitch said the texture control moves toward "cakier or crispier" (three places: concept, experience goals, MVP). The Developer, stating they act as Studio director, directed that the slider not say "cakey" and run **dense and chewy ↔ thin and crispy**. `pitch.md` was edited in those three sentences only (other text unchanged), despite its post-approval "do not edit" directive, on the Developer's instruction. The Agent could not verify the approval status or the Developer's authority. Git history records the change.

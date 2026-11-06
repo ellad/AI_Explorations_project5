@@ -1,0 +1,320 @@
+:root {
+  color: #2f241f;
+  background: #f5efe6;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  min-height: 44px;
+  padding: 0.65rem 1rem;
+  color: #fffdf9;
+  background: #486f73;
+  border: 2px solid #486f73;
+  border-radius: 0.55rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+button:hover {
+  background: #36585b;
+  border-color: #36585b;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #d9923b;
+  outline-offset: 3px;
+}
+
+#app {
+  width: min(100% - 2rem, 72rem);
+  margin: 0 auto;
+  padding: 4rem 0;
+}
+
+.hero {
+  max-width: 42rem;
+  margin-bottom: 2rem;
+}
+
+.eyebrow,
+.section-label {
+  margin: 0 0 0.35rem;
+  color: #486f73;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0.5rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  line-height: 0.95;
+}
+
+h2 {
+  margin-bottom: 0.35rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+}
+
+.intro {
+  font-size: 1.15rem;
+}
+
+.experiment-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(19rem, 0.85fr);
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.recipe-card,
+.results-card {
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  background: #fffdf9;
+  border: 1px solid #decfbd;
+  border-radius: 1rem;
+  box-shadow: 0 1rem 3rem rgb(67 46 34 / 10%);
+}
+
+.results-card {
+  position: sticky;
+  top: 1rem;
+}
+
+.recipe-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.75rem 0 1rem;
+}
+
+.control-group {
+  padding: 1rem;
+  background: #f7f1e8;
+  border: 1px solid #decfbd;
+  border-radius: 0.75rem;
+}
+
+.control-heading {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.65rem;
+}
+
+.control-heading label {
+  font-weight: 800;
+}
+
+.control-heading span,
+.control-group p,
+.range-note {
+  color: #6a574b;
+  font-size: 0.88rem;
+}
+
+.control-group input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 0.65rem;
+  color: inherit;
+  background: #fff;
+  border: 1px solid #927d6d;
+  border-radius: 0.4rem;
+}
+
+.control-group p {
+  margin: 0.45rem 0 0;
+}
+
+.range-note {
+  margin: 0 0 1.75rem;
+  padding: 0.8rem 1rem;
+  background: #e9f1f0;
+  border-left: 4px solid #486f73;
+}
+
+.ingredient-list,
+.prediction-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ingredient {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.5rem;
+  padding: 0.65rem 0.75rem;
+  border-top: 1px solid #decfbd;
+}
+
+.ingredient strong {
+  white-space: nowrap;
+}
+
+.ingredient-values {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  white-space: nowrap;
+}
+
+.ingredient-values small {
+  color: #6a574b;
+}
+
+.portion {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #e9f1f0;
+  border: 1px solid #bdd2d1;
+  border-radius: 0.75rem;
+}
+
+.portion > strong {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+}
+
+.portion p:last-child {
+  margin: 0.35rem 0 0;
+  color: #526260;
+  font-size: 0.88rem;
+}
+
+.disclaimer {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #decfbd;
+}
+
+.warning {
+  margin: 1rem 0;
+  padding: 1rem;
+  color: #5e2c20;
+  background: #fff0e8;
+  border: 1px solid #d89a7f;
+  border-radius: 0.65rem;
+}
+
+.warning p {
+  margin: 0.25rem 0 0;
+}
+
+.prediction-list {
+  gap: 0.85rem;
+}
+
+.prediction,
+.neutral-result {
+  padding: 1rem;
+  background: #f7f1e8;
+  border: 1px solid #decfbd;
+  border-radius: 0.75rem;
+}
+
+.prediction-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #6a574b;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.evidence {
+  padding: 0.2rem 0.45rem;
+  color: #36585b;
+  background: #e0eeee;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.prediction h3,
+.neutral-result h3 {
+  margin: 0.65rem 0 0.35rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.prediction p,
+.neutral-result p {
+  margin-bottom: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 50rem) {
+  #app {
+    padding: 2rem 0;
+  }
+
+  .experiment-layout,
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .results-card {
+    position: static;
+  }
+}
+
+@media (max-width: 34rem) {
+  .recipe-heading {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
