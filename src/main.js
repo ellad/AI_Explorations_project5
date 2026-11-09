@@ -1,5 +1,9 @@
 import "./styles.css";
-import { evaluateExperiment, supportedLimits } from "./model/predictionRules.js";
+import {
+  evaluateExperiment,
+  supportedLimits,
+  validateCookieCount
+} from "./model/predictionRules.js";
 
 const app = document.querySelector("#app");
 let experiment = { butterRatio: 0.7687, cornSyrupPercent: 0, cookieCount: 24 };
@@ -69,9 +73,10 @@ app.innerHTML = `
             min="1"
             step="1"
             value="24"
-            aria-describedby="yield-help"
+            aria-describedby="yield-help yield-error"
           />
           <p id="yield-help">Enter a positive whole number.</p>
+          <p class="field-error" id="yield-error" aria-live="polite"></p>
         </div>
       </div>
 
@@ -101,6 +106,7 @@ app.innerHTML = `
 const butterRatioControl = app.querySelector("#butter-ratio-control");
 const cornSyrupControl = app.querySelector("#corn-syrup-control");
 const yieldControl = app.querySelector("#yield-control");
+const yieldError = app.querySelector("#yield-error");
 const ingredientList = app.querySelector("#ingredient-list");
 const portionEstimate = app.querySelector("#portion-estimate");
 const predictionsContainer = app.querySelector("#predictions");
@@ -209,12 +215,17 @@ butterRatioControl.addEventListener("input", () => {
 });
 
 yieldControl.addEventListener("input", () => {
-  const cookieCount = readNumber(yieldControl, 24);
-  if (!Number.isInteger(cookieCount) || cookieCount <= 0) {
-    status.textContent = "Cookie count must be a positive whole number.";
+  const validation = validateCookieCount(yieldControl.value);
+  if (!validation.valid) {
+    yieldControl.setAttribute("aria-invalid", "true");
+    yieldError.textContent = validation.message;
+    status.textContent = validation.message;
     return;
   }
 
+  const cookieCount = validation.value;
+  yieldControl.removeAttribute("aria-invalid");
+  yieldError.textContent = "";
   experiment = { ...experiment, cookieCount };
   updateExperiment(`Yield updated to ${cookieCount} cookies. Portion estimate updated.`);
 });
@@ -234,6 +245,8 @@ app.querySelector("#reset-recipe").addEventListener("click", (event) => {
   butterRatioControl.value = "0.7687";
   cornSyrupControl.value = "0";
   yieldControl.value = "24";
+  yieldControl.removeAttribute("aria-invalid");
+  yieldError.textContent = "";
   updateExperiment("Recipe reset to the control amounts. Predictions cleared.");
   event.currentTarget.focus();
 });

@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { evaluateExperiment, supportedLimits } from "../src/model/predictionRules.js";
+import {
+  evaluateExperiment,
+  supportedLimits,
+  validateCookieCount
+} from "../src/model/predictionRules.js";
 
 function amount(result, id) {
   return result.recipe.ingredients.find((ingredient) => ingredient.id === id).grams;
@@ -103,4 +107,15 @@ test("invalid experiment values fail explicitly", () => {
   assert.throws(() => evaluateExperiment({ butterRatio: "not a number" }), /finite numbers/);
   assert.throws(() => evaluateExperiment({ cookieCount: 2.5 }), /positive whole number/);
   assert.throws(() => evaluateExperiment({ cookieCount: 0 }), /positive whole number/);
+});
+
+test("cookie-count validation accepts positive whole numbers and explains invalid values", () => {
+  assert.deepEqual(validateCookieCount("12"), { valid: true, value: 12, message: "" });
+
+  for (const cookieCount of ["0", "2.5", ""]) {
+    assert.deepEqual(validateCookieCount(cookieCount), {
+      valid: false,
+      message: "Cookie count must be a positive whole number."
+    });
+  }
 });

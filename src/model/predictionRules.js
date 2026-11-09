@@ -14,6 +14,19 @@ export const supportedLimits = Object.freeze({
   controlPortionGrams: CONTROL_DOUGH_GRAMS / CONTROL_COOKIE_COUNT
 });
 
+export function validateCookieCount(cookieCount) {
+  const numericCookieCount = Number(cookieCount);
+
+  if (!Number.isInteger(numericCookieCount) || numericCookieCount <= 0) {
+    return {
+      valid: false,
+      message: "Cookie count must be a positive whole number."
+    };
+  }
+
+  return { valid: true, value: numericCookieCount, message: "" };
+}
+
 const controlRatios = Object.freeze(
   Object.fromEntries(
     controlRecipe.ingredients.map((ingredient) => [
@@ -173,8 +186,9 @@ export function evaluateExperiment({
     throw new TypeError("Experiment amounts must be finite numbers.");
   }
 
-  if (!Number.isInteger(numericCookieCount) || numericCookieCount <= 0) {
-    throw new RangeError("Cookie count must be a positive whole number.");
+  const cookieCountValidation = validateCookieCount(numericCookieCount);
+  if (!cookieCountValidation.valid) {
+    throw new RangeError(cookieCountValidation.message);
   }
 
   const ratios = buildRatios(numericButterRatio, numericCornSyrupPercent);

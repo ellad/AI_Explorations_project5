@@ -160,6 +160,20 @@ h2 {
   margin: 0.45rem 0 0;
 }
 
+.control-group .field-error {
+  color: #8a3f2d;
+  font-weight: 700;
+}
+
+input[aria-invalid="true"] {
+  background: #fff4f1;
+  border: 2px solid #8a3f2d;
+}
+
+input[aria-invalid="true"]:focus-visible {
+  outline-color: #8a3f2d;
+}
+
 .range-note {
   margin: 0 0 1.75rem;
   padding: 0.8rem 1rem;

@@ -19,8 +19,8 @@ When you begin this step, start a fresh chat so its transcript stays clean. For 
 The current plan for each phase, starting from the map in your pitch. Update it as the project evolves.
 
 - **Phase 1 — Ideate and pitch (complete):** Chose Half Baked, defined the audience and scope, and received approval for the pitch.
-- **Phase 2 — Prove the core (current):** Implement and verify one complete prediction loop using the control recipe, flour adjustment, and corn-syrup substitution.
-- **Phase 3 — Expand and test:** Add the approved grouped texture control and butter-to-oil substitution after the first rules are stable. Begin comparison views and usability testing.
+- **Phase 2 — Prove the core (complete):** Implemented and verified one complete prediction loop using the control recipe, butter-ratio adjustment, and corn-syrup substitution.
+- **Phase 3 — Expand and test (current):** Add the approved grouped texture control and butter-to-oil substitution after the first rules are stable. Begin comparison views and usability testing.
 - **Phase 4 — Revise and prepare for peer review:** Improve responsive layout, accessibility, explanations, supported-range warnings, branding, and overall stability. Publish a peer-review version.
 - **Phase 5 — Finish and showcase:** Respond to feedback, simplify the system, verify the final model and interface, finish documentation, and publish the final version.
 
@@ -122,7 +122,15 @@ Record what you tested and what happened. For peer testing, note what people did
 - Added visible control labels and range text, keyboard-sized controls, focus preservation on reset, and a polite status announcement for updates.
 - `npm test`: all 12 tests pass after the ratio-and-yield revision.
 - `npm run build`: passed.
-- **Developer verification:** Pending for browser scenarios, keyboard operation, clarity of predictions, and announcement behavior.
+- **Developer verification, 2026-11-09:** Passed the control, butter-boundary, corn-syrup, yield-scaling, combined-change, out-of-range, reverse-change, reset, and keyboard-navigation scenarios. The Developer found that invalid yields produced no visible message; the interface was revised to show an inline error, mark and visibly highlight the invalid field, retain the last valid recipe, and clear the error after valid input. The Developer retested and confirmed that the revised validation works as intended and that the prediction loop is understandable enough to complete Phase 2.
+
+#### Checkpoint 4 — Phase 2 evidence and cleanup, 2026-11-09
+
+- Moved cookie-count validation into the shared prediction model so the interface and evaluator use the same rule.
+- Added automated coverage for valid and invalid cookie counts; `npm test` passes all 13 tests.
+- `npm run build` passes with six modules transformed.
+- Reviewed the Phase 2 diff for whitespace errors, unrelated files, and likely secrets; none were found.
+- Corrected the five-week map to describe the implemented butter-ratio adjustment rather than a flour adjustment.
 
 ## Simplification reviews
 

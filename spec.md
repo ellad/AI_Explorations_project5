@@ -20,7 +20,7 @@ What Users should be able to do and experience in the current version, tied to t
 
 ### Phase 2 goal
 
-**Status:** Approved by the Developer on 2026-11-06.
+**Status:** Completed and verified by the Developer on 2026-11-09.
 
 Prove that **Half Baked** can turn a supported recipe change into a consistent, understandable prediction without presenting that prediction as a guaranteed result.
 
@@ -106,6 +106,7 @@ The approved control recipe establishes a default yield of 24 cookies and an int
 - Current ingredient values and limits are available as text, not communicated by position or color alone.
 - Prediction updates are announced to assistive technology without unexpectedly moving keyboard focus.
 - Reset is a labeled button and restores the complete control state in one action.
+- Invalid yields show a visible inline error, mark and visibly highlight the field as invalid, retain the last valid recipe, and clear the error when the User enters a positive whole number.
 
 ### Phase 2 completion checks
 
