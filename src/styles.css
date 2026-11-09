@@ -129,6 +129,75 @@ h2 {
   border-radius: 0.75rem;
 }
 
+.texture-control-group {
+  grid-column: 1 / -1;
+}
+
+.texture-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.35rem;
+  color: #6a574b;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.texture-labels span:nth-child(2) {
+  text-align: center;
+}
+
+.texture-labels span:last-child {
+  text-align: right;
+}
+
+.control-group input[type="range"] {
+  appearance: none;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  accent-color: #486f73;
+}
+
+.control-group input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: #bdd2d1;
+  border-radius: 999px;
+}
+
+.control-group input[type="range"]::-webkit-slider-thumb {
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+  appearance: none;
+  background: #486f73;
+  border: 3px solid #fffdf9;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #486f73;
+}
+
+.control-group input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: #bdd2d1;
+  border-radius: 999px;
+}
+
+.control-group input[type="range"]::-moz-range-progress {
+  height: 6px;
+  background: #486f73;
+  border-radius: 999px;
+}
+
+.control-group input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #486f73;
+  border: 3px solid #fffdf9;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #486f73;
+}
+
 .control-heading {
   display: flex;
   flex-direction: column;
@@ -253,6 +322,12 @@ input[aria-invalid="true"]:focus-visible {
   margin: 0.25rem 0 0;
 }
 
+.conflict-summary {
+  padding: 0.75rem;
+  background: #fff8dd;
+  border-left: 4px solid #b28b2e;
+}
+
 .prediction-list {
   gap: 0.85rem;
 }
@@ -263,6 +338,35 @@ input[aria-invalid="true"]:focus-visible {
   background: #f7f1e8;
   border: 1px solid #decfbd;
   border-radius: 0.75rem;
+}
+
+.contributor-list {
+  display: grid;
+  gap: 0.85rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contributor {
+  padding-top: 0.85rem;
+  border-top: 1px solid #decfbd;
+}
+
+.contributor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.contributor p {
+  margin: 0.35rem 0 0;
+}
+
+.contributor-direction {
+  color: #5e2c20;
+  font-weight: 700;
 }
 
 .prediction-heading {

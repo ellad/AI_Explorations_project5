@@ -1,17 +1,24 @@
 import "./styles.css";
 import {
   evaluateExperiment,
+  buildTextureRatios,
   supportedLimits,
   validateCookieCount
 } from "./model/predictionRules.js";
 
 const app = document.querySelector("#app");
-let experiment = { butterRatio: 0.7687, cornSyrupPercent: 0, cookieCount: 24 };
+let experiment = {
+  texturePosition: 0,
+  butterRatio: 0.7687,
+  butterCustomized: false,
+  cornSyrupPercent: 0,
+  cookieCount: 24
+};
 
 app.innerHTML = `
   <header class="hero">
-    <p class="eyebrow">Experiment before you bake</p>
     <h1>Half Baked</h1>
+    <p class="eyebrow">Experiment before you bake</p>
     <p class="intro">
       Explore how a supported ingredient change may affect a familiar chocolate-chip cookie.
     </p>
@@ -21,7 +28,7 @@ app.innerHTML = `
     <section class="recipe-card" aria-labelledby="experiment-title">
       <div class="recipe-heading">
         <div>
-          <p class="section-label">Phase 2 experiment</p>
+          <p class="section-label">Recipe experiment</p>
           <h2 id="experiment-title">Change the formula</h2>
           <p>Flour is the 1.0 reference. Adjust another ingredient's ratio to change the formula.</p>
         </div>
@@ -29,6 +36,28 @@ app.innerHTML = `
       </div>
 
       <div class="controls" aria-describedby="supported-range-note">
+        <div class="control-group texture-control-group">
+          <div class="control-heading">
+            <label for="texture-control">Texture direction</label>
+            <span id="texture-status">Control formula</span>
+          </div>
+          <input
+            id="texture-control"
+            type="range"
+            min="-1"
+            max="1"
+            step="0.1"
+            value="0"
+            aria-describedby="texture-help texture-status"
+          />
+          <div class="texture-labels" aria-hidden="true">
+            <span>Thin and crispy</span>
+            <span>Control</span>
+            <span>Dense and chewy</span>
+          </div>
+          <p id="texture-help">Moves linked butter, sugar, egg, and baking-soda ratios together.</p>
+        </div>
+
         <div class="control-group">
           <div class="control-heading">
             <label for="butter-ratio-control">Butter ratio</label>
@@ -104,6 +133,8 @@ app.innerHTML = `
 `;
 
 const butterRatioControl = app.querySelector("#butter-ratio-control");
+const textureControl = app.querySelector("#texture-control");
+const textureStatus = app.querySelector("#texture-status");
 const cornSyrupControl = app.querySelector("#corn-syrup-control");
 const yieldControl = app.querySelector("#yield-control");
 const yieldError = app.querySelector("#yield-error");
@@ -161,8 +192,8 @@ function renderWarnings(warnings) {
     .join("");
 }
 
-function renderPredictions(predictions) {
-  if (predictions.length === 0) {
+function renderPredictions(predictionGroups) {
+  if (predictionGroups.length === 0) {
     predictionsContainer.innerHTML = `
       <div class="neutral-result">
         <h3>No supported change to predict</h3>
@@ -174,16 +205,31 @@ function renderPredictions(predictions) {
 
   predictionsContainer.innerHTML = `
     <ul class="prediction-list">
-      ${predictions
+      ${predictionGroups
         .map(
-          ({ rule, quality, direction, evidence, explanation }) => `
-            <li class="prediction" data-rule="${rule}">
+          ({ quality, direction, conflict, contributors }) => `
+            <li class="prediction">
               <div class="prediction-heading">
                 <span>${quality}</span>
-                <span class="evidence">${evidence}</span>
               </div>
               <h3>${direction}</h3>
-              <p>${explanation}</p>
+              ${conflict ? `<p class="conflict-summary">${conflict}</p>` : ""}
+              <ul class="contributor-list">
+                ${contributors
+                  .map(
+                    ({ rule, variable, direction: contributorDirection, evidence, explanation }) => `
+                      <li class="contributor" data-rule="${rule}">
+                        <div class="contributor-heading">
+                          <strong>${variable}</strong>
+                          <span class="evidence">${evidence}</span>
+                        </div>
+                        ${conflict ? `<p class="contributor-direction">${contributorDirection}</p>` : ""}
+                        <p>${explanation}</p>
+                      </li>
+                    `
+                  )
+                  .join("")}
+              </ul>
             </li>
           `
         )
@@ -197,7 +243,15 @@ function updateExperiment(announcement) {
   renderIngredientList(result.recipe, result.ratios);
   renderPortionEstimate(result.portion);
   renderWarnings(result.warnings);
-  renderPredictions(result.predictions);
+  renderPredictions(result.predictionGroups);
+  const customized = experiment.butterCustomized || experiment.cornSyrupPercent !== 0;
+  const positionName =
+    experiment.texturePosition < 0
+      ? "Thin and crispy direction"
+      : experiment.texturePosition > 0
+        ? "Dense and chewy direction"
+        : "Control formula";
+  textureStatus.textContent = customized ? `${positionName} — Customized` : positionName;
   status.textContent = announcement;
 }
 
@@ -206,10 +260,24 @@ function readNumber(control, fallback) {
   return Number.isFinite(value) ? value : fallback;
 }
 
+textureControl.addEventListener("input", () => {
+  const texturePosition = Number(textureControl.value);
+  const mappedRatios = buildTextureRatios(texturePosition);
+  experiment = {
+    ...experiment,
+    texturePosition,
+    butterRatio: mappedRatios.butter,
+    butterCustomized: false
+  };
+  butterRatioControl.value = mappedRatios.butter.toFixed(4);
+  updateExperiment(`Texture direction updated. ${textureStatus.textContent}. Predictions updated.`);
+});
+
 butterRatioControl.addEventListener("input", () => {
   experiment = {
     ...experiment,
-    butterRatio: readNumber(butterRatioControl, supportedLimits.butterRatio.control)
+    butterRatio: readNumber(butterRatioControl, supportedLimits.butterRatio.control),
+    butterCustomized: true
   };
   updateExperiment(`Butter ratio updated to ${experiment.butterRatio}. Predictions updated.`);
 });
@@ -241,7 +309,14 @@ cornSyrupControl.addEventListener("input", () => {
 });
 
 app.querySelector("#reset-recipe").addEventListener("click", (event) => {
-  experiment = { butterRatio: 0.7687, cornSyrupPercent: 0, cookieCount: 24 };
+  experiment = {
+    texturePosition: 0,
+    butterRatio: 0.7687,
+    butterCustomized: false,
+    cornSyrupPercent: 0,
+    cookieCount: 24
+  };
+  textureControl.value = "0";
   butterRatioControl.value = "0.7687";
   cornSyrupControl.value = "0";
   yieldControl.value = "24";

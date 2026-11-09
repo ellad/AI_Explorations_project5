@@ -28,6 +28,22 @@ The current plan for each phase, starting from the map in your pitch. Update it 
 
 The next few results to build, each with what it should produce and how you will test it against the acceptance checks in `spec.md`. Test each result before moving on, including related behavior that already worked, and commit meaningful working checkpoints.
 
+### Phase 3, Checkpoint 1 — Grouped texture control
+
+**Result:** A keyboard-accessible dense-and-chewy to thin-and-crispy control applies the linked butter, sugar, egg, and baking-soda mappings approved in `spec.md`. Individual edits after a grouped change visibly mark the formula as customized; moving the grouped control again reapplies its complete formula. Corn syrup remains independent.
+
+**Tests:**
+
+- Verify the crispy endpoint, control midpoint, and dense endpoint against every mapped ratio in `spec.md`.
+- Verify intermediate sugar and butter mappings, the crispy-only egg change, proportional baking soda, yield scaling, and reset.
+- Verify that manual butter and corn-syrup changes mark a grouped formula as customized and that moving the grouped control clears that status.
+- Verify grouped predictions, competing effects, keyboard operation, visible labels, and live update announcements.
+- Run all automated tests and the production build before direct Developer testing.
+
+**Stop condition:** Do not begin the butter-to-oil substitution until the Developer verifies the grouped interaction and decides that the linked changes and explanations are understandable.
+
+**Result, 2026-11-09:** Complete. The grouped control applies the approved butter, sugar, egg, and baking-soda mappings; manual refinements are identified as customized; corn syrup remains independent; and predictions are grouped by quality with contributor-level evidence and explicit competing effects. The Developer passed the endpoint, midpoint, customization, reset, keyboard, and combined-change scenarios. After direct testing, the Developer requested a full-width palette-matched slider and consolidated prediction cards; the revisions were implemented and approved. `npm test` passes all 20 tests and `npm run build` succeeds.
+
 ### Checkpoint 1 — Project foundation and recipe state
 
 **Result:** A minimal Vite application loads the approved control recipe from structured JavaScript data and displays its ingredient weights. Reset restores a fresh copy of that control state.

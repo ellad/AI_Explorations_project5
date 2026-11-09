@@ -37,6 +37,14 @@ For the first working slice, the User starts with the approved Toll House contro
 
 The Phase 2 version is a functional proof of the prediction system, not the finished visual design or complete MVP. The grouped texture slider, butter-to-oil substitution, branding, and polished responsive interface follow only after this rule loop works.
 
+### Phase 3 grouped-control goal
+
+**Status:** Implemented and verified by the Developer on 2026-11-09.
+
+Add one keyboard-accessible texture control that moves the control recipe toward **dense and chewy** or **thin and crispy** by changing a researched group of ingredient relationships together. The Toll House control recipe is the midpoint. The grouped control is a shortcut through supported recipe states, not a claim that cookie texture can be reduced to one exact score.
+
+This checkpoint does not add the butter-to-oil substitution, comparison history, test-bake photographs, or final visual branding.
+
 ## Behavior and acceptance checks
 
 For each feature or behavior you are building, describe what it should do and what counts as working, including failure cases and accessibility where they apply. Distinguish approved behavior from provisional ideas, and leave untested details open until they are needed.
@@ -75,8 +83,31 @@ The User can replace 0–10% of total sugar with corn syrup. Corn syrup replaces
 
 - Butter-ratio and corn-syrup rules are evaluated independently and their explanations remain visible separately.
 - If both changes predict the same direction, the interface may say they reinforce each other, but it must not calculate a stronger numeric effect.
-- If rules point in different directions, show both explanations instead of cancelling them into a single score.
+- If rules point in different directions, identify them as **competing effects**, state that the available evidence cannot predict which will dominate, and retain both individual explanations instead of cancelling them into a single score.
 - The same ingredient state must always produce the same predictions and labels.
+
+### Grouped texture control — Phase 3 draft
+
+The control has three named reference positions: **thin and crispy**, **control**, and **dense and chewy**. Its primary relationship is flour to butter:
+
+- Thin and crispy: approximately `1.0 : 1` flour to butter. With flour fixed as the formula's `1.0` reference and the existing supported butter limit preserved, the implemented endpoint is `1 : 0.9609`, or approximately `1.04 : 1`.
+- Control midpoint: approximately `1.3 : 1`, reproducing the approved control recipe.
+- Dense and chewy: approximately `1.6 : 1`.
+- Values outside approximately `0.98–1.63 : 1` are not supported by this grouped rule.
+
+The grouped control also changes these approved variables:
+
+- At the thin-and-crispy endpoint, total sugar is 125% of the control and 45% is brown sugar.
+- At the control midpoint, total sugar and its split reproduce the approved control amounts exactly.
+- At the dense-and-chewy endpoint, total sugar is 75% of the control and 70% is brown sugar.
+- Between the three reference positions, total sugar and brown-sugar share change proportionally. More granulated sugar moves toward crispness; more brown sugar moves toward moisture and chewiness.
+- Egg remains at the control's 1:1 white-to-yolk composition. It is 50 g only at the crispy endpoint and 100 g at every other position, avoiding impractical partial-egg measurements. It does not increase toward the dense endpoint.
+- Baking soda scales in direct proportion to brown-sugar weight rather than acting as an independent control; the control remains exactly 6 g.
+- Corn syrup and the planned vegetable-oil substitution remain separate controls because each can move thickness and chewiness in different directions.
+
+The grouped control returns the same three qualitative readouts used in Phase 2: spread and thickness, crisp to chewy, and moisture. It shows the contributing ingredient changes and keeps conflicting effects visible rather than combining them into a numeric score.
+
+Flour remains the fixed `1.0` formula reference and the grouped control changes the butter ratio to produce the flour-to-butter reference points. As in Phase 2, displayed gram weights are normalized across the selected yield's target dough weight, so the output weights may all change while the formula relationships remain fixed.
 
 ### Yield and portion estimate
 
@@ -99,6 +130,10 @@ The approved control recipe establishes a default yield of 24 cookies and an int
 - Include this meaning near the results: predictions are based on information collected from recipes and food-science sources; actual results will vary.
 - Do not use numeric outcome scores, exact dimensions, or language that promises a result.
 - A prediction includes the direction of change, its evidence label, and a short cause-and-effect explanation.
+- Show one prediction card per quality rather than repeating a quality for every rule that affects it.
+- Within each quality card, list every contributing variable with its own explanation and evidence label.
+- When all contributors point in the same direction, summarize that shared direction once at the top of the card.
+- When contributors point in different directions, title the result **Competing effects**, state that the evidence cannot determine which will dominate, and retain each contributor's direction and explanation.
 
 ### Interaction and accessibility
 
@@ -195,4 +230,4 @@ Consequential structural decisions, the alternatives considered, and why you cho
 - **2026-11-06 — Yield scales the formula:** The control recipe is treated as 24 cookies at approximately 53.8 g of dough each. A selected yield sets target dough mass, and the current ratios distribute that mass across ingredients. This keeps portion size consistent while scaling the recipe. Volume-based scoop guidance is deferred.
 - **2026-11-06 — Qualitative output:** Predictions use directions and evidence labels instead of numeric outcome scores because the research does not support precise measurements.
 - **2026-11-06 — Conflicts remain visible:** Rules do not cancel one another into a single result. Showing each cause preserves uncertainty and makes the model explainable.
-- **Provisional — Grouped texture slider:** Its exact ingredient mapping is intentionally deferred until the individual rules work and can be tested.
+- **2026-11-02 and 2026-11-09 — Grouped texture mapping:** The Developer approved a dense-and-chewy to thin-and-crispy axis, with the Toll House control at the midpoint; flour-to-butter reference points of approximately `1.04`, `1.3`, and `1.6`; total sugar from 125% to 75% of control; brown sugar from 45% to 70% of total sugar; one egg only at the crispy endpoint and two eggs elsewhere; and baking soda linked proportionally to brown-sugar weight. Flour stays the formula's `1.0` reference so this mapping extends the existing ratio-first structure without expanding the Phase 2 butter limit.
