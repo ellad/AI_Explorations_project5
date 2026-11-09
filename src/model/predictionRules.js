@@ -456,3 +456,53 @@ export function evaluateExperiment({
     warnings: [...butterResult.warnings, ...cornSyrupResult.warnings, ...oilResult.warnings]
   };
 }
+
+const comparisonIngredientOrder = Object.freeze([
+  "flour",
+  "butter",
+  "vegetable-oil",
+  "granulated-sugar",
+  "brown-sugar",
+  "corn-syrup",
+  "chocolate",
+  "egg",
+  "baking-soda",
+  "salt",
+  "vanilla"
+]);
+
+export function compareExperimentToControl(experiment = {}) {
+  const current = evaluateExperiment(experiment);
+  const control = evaluateExperiment({ cookieCount: current.portion.cookieCount });
+  const currentIngredients = new Map(
+    current.recipe.ingredients.map((ingredient) => [ingredient.id, ingredient])
+  );
+  const controlIngredients = new Map(
+    control.recipe.ingredients.map((ingredient) => [ingredient.id, ingredient])
+  );
+
+  return comparisonIngredientOrder
+    .map((id) => {
+      const controlIngredient = controlIngredients.get(id);
+      const currentIngredient = currentIngredients.get(id);
+      const controlGrams = controlIngredient?.grams ?? 0;
+      const experimentGrams = currentIngredient?.grams ?? 0;
+      const controlRatio = control.ratios[id] ?? 0;
+      const experimentRatio = current.ratios[id] ?? 0;
+
+      return {
+        id,
+        name: currentIngredient?.name ?? controlIngredient?.name,
+        control: { grams: controlGrams, ratio: controlRatio },
+        experiment: { grams: experimentGrams, ratio: experimentRatio },
+        differenceGrams: Number((experimentGrams - controlGrams).toFixed(1)),
+        changed: Math.abs(experimentRatio - controlRatio) > 1e-10
+      };
+    })
+    .filter(
+      ({ id, control, experiment }) =>
+        !["corn-syrup", "vegetable-oil"].includes(id) ||
+        control.grams !== 0 ||
+        experiment.grams !== 0
+    );
+}

@@ -53,6 +53,12 @@ Add a keyboard-accessible control for replacing some or all of the current formu
 
 This checkpoint does not claim that oil and butter are interchangeable in flavor, creaming behavior, or measured spread.
 
+### Phase 3 comparison-view goal
+
+**Status:** Implemented and verified by the Developer on 2026-11-09.
+
+Replace the current single-recipe ingredient list with one responsive comparison table that lets the User scan the control and experiment row by row. The comparison should make formula changes understandable without duplicating the full recipe elsewhere on the page.
+
 ## Behavior and acceptance checks
 
 For each feature or behavior you are building, describe what it should do and what counts as working, including failure cases and accessibility where they apply. Distinguish approved behavior from provisional ideas, and leave untested details open until they are needed.
@@ -146,6 +152,22 @@ The approved control recipe establishes a default yield of 24 cookies and an int
 - Clearly describe the result as an estimate because ingredient loss and measurement variation can change the actual dough weight.
 - Do not provide a tablespoon or scoop-volume conversion until one is supported by research or direct measurement.
 - Changing only the yield scales every ingredient by the same factor and does not change any texture prediction.
+
+### Control-versus-experiment comparison — Phase 3
+
+The table has one row per ingredient and three data columns: **Control**, **Experiment**, and **Change**.
+
+- Control and experiment use the same selected cookie count so the weights are directly comparable.
+- Each control and experiment cell shows grams first and the flour-relative ratio second.
+- The change cell shows the signed gram difference and a visible **Changed** label when the formulas differ; unchanged rows say **No change**.
+- A change caused only by selecting another yield does not mark every ingredient as changed because both columns scale to that yield.
+- Corn syrup and vegetable oil appear when present in the experiment. Their control value is `0 g` and ratio `0.00`.
+- Ingredients remain in a consistent order across control and experiment states.
+- Changed rows may use a background accent, but the **Changed** text must carry the meaning without color.
+- At narrow widths, each ingredient row stacks its labeled Control, Experiment, and Change values instead of requiring horizontal page scrolling.
+- The table has a visible caption or heading and semantic row and column headers for assistive technology.
+- Prediction cards remain separate; the control recipe has no change predictions to duplicate in the table.
+- Reset makes every row show **No change** while retaining the selected default yield of 24 cookies.
 
 ### Prediction presentation
 

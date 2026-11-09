@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   buildTextureRatios,
+  compareExperimentToControl,
   evaluateExperiment,
   supportedLimits,
   validateCookieCount,
@@ -11,6 +12,49 @@ import {
 function amount(result, id) {
   return result.recipe.ingredients.find((ingredient) => ingredient.id === id).grams;
 }
+
+test("recipe comparison marks formula changes but ignores yield-only scaling", () => {
+  const control = compareExperimentToControl();
+  const doubledYield = compareExperimentToControl({ cookieCount: 48 });
+  const changed = compareExperimentToControl({ butterRatio: 0.9 });
+
+  assert.equal(control.every(({ changed: rowChanged }) => !rowChanged), true);
+  assert.equal(doubledYield.every(({ changed: rowChanged }) => !rowChanged), true);
+  assert.equal(doubledYield.find(({ id }) => id === "flour").control.grams, 588);
+  assert.equal(changed.find(({ id }) => id === "butter").changed, true);
+});
+
+test("recipe comparison adds optional substitution rows in stable positions", () => {
+  const rows = compareExperimentToControl({
+    cornSyrupPercent: 10,
+    oilReplacementPercent: 50
+  });
+  const ids = rows.map(({ id }) => id);
+  const oil = rows.find(({ id }) => id === "vegetable-oil");
+  const cornSyrup = rows.find(({ id }) => id === "corn-syrup");
+
+  assert.equal(ids.indexOf("vegetable-oil"), ids.indexOf("butter") + 1);
+  assert.equal(ids.indexOf("corn-syrup"), ids.indexOf("brown-sugar") + 1);
+  assert.deepEqual(oil.control, { grams: 0, ratio: 0 });
+  assert.deepEqual(cornSyrup.control, { grams: 0, ratio: 0 });
+  assert.equal(oil.changed, true);
+  assert.equal(cornSyrup.changed, true);
+});
+
+test("recipe comparison reports signed gram differences and reset-equivalent rows", () => {
+  const changed = compareExperimentToControl({ texturePosition: 1 });
+  const reset = compareExperimentToControl({
+    texturePosition: 0,
+    butterRatio: supportedLimits.butterRatio.control,
+    cornSyrupPercent: 0,
+    oilReplacementPercent: 0,
+    cookieCount: 24
+  });
+
+  assert.ok(changed.some(({ differenceGrams }) => differenceGrams > 0));
+  assert.ok(changed.some(({ differenceGrams }) => differenceGrams < 0));
+  assert.equal(reset.every(({ changed: rowChanged }) => !rowChanged), true);
+});
 
 test("grouped texture endpoints reproduce the approved formula mappings", () => {
   const crispy = buildTextureRatios(-1);

@@ -62,6 +62,21 @@ The next few results to build, each with what it should produce and how you will
 
 **Result, 2026-11-09:** Complete with the documented test-bake follow-up still open. The interface supports 0–100% replacement using the equal-volume `198 ÷ 226` conversion, shows butter and oil separately, includes the 30-minute chilling condition, validates impossible percentages, preserves oil through grouped-texture changes, consolidates oil evidence into the prediction cards, and resets cleanly. After reviewing additional Developer-supplied sources, the model was revised from a 75% cap and denser/chewier prediction to full replacement with the directly tested crisper/less-chewy and increased-spread directions. The Developer passed the control, partial, full, invalid-input, combined-change, yield, reset, and keyboard scenarios. `npm test` passes all 24 tests and `npm run build` succeeds.
 
+### Phase 3, Checkpoint 3 — Control-versus-experiment comparison
+
+**Result:** The current ingredient list becomes one responsive semantic table comparing the control and experiment at the selected yield. Each row shows grams, flour-relative ratios, and an explicit changed/no-change result without duplicating the recipe elsewhere.
+
+**Tests:**
+
+- Verify the control state, each individual adjustment, grouped texture endpoints, combined changes, optional corn-syrup and oil rows, yield-only changes, and reset.
+- Confirm gram differences and ratios are derived from model output and that yield-only scaling does not mark rows changed.
+- Confirm changed meaning is available as text, table headers are announced correctly, and the narrow layout does not require horizontal page scrolling.
+- Run all automated tests and the production build before direct Developer testing.
+
+**Stop condition:** Do not begin formal usability testing or another feature until the Developer verifies that the comparison is accurate, readable, responsive, and useful.
+
+**Result, 2026-11-09:** Complete. The single-recipe list was replaced with a semantic comparison table showing control, experiment, signed gram difference, ratios, and explicit changed/no-change text. Control weights scale to the selected yield, so yield-only changes do not create false formula changes. Optional corn-syrup and vegetable-oil rows appear only when used, and narrow screens receive labeled stacked ingredient cards without horizontal page scrolling. The Developer passed the control, individual-change, grouped-control, yield-only, combined-change, reset, responsive, and accessibility checks. `npm test` passes all 27 tests and `npm run build` succeeds.
+
 ### Checkpoint 1 — Project foundation and recipe state
 
 **Result:** A minimal Vite application loads the approved control recipe from structured JavaScript data and displays its ingredient weights. Reset restores a fresh copy of that control state.

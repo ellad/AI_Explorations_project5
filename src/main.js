@@ -2,6 +2,7 @@ import "./styles.css";
 import {
   evaluateExperiment,
   buildTextureRatios,
+  compareExperimentToControl,
   supportedLimits,
   validateCookieCount,
   validateOilReplacement
@@ -135,8 +136,8 @@ app.innerHTML = `
         Values outside the supported ratio ranges remain visible, but Half Baked will withhold that prediction.
       </p>
 
-      <h3>Current recipe</h3>
-      <ul class="ingredient-list" id="ingredient-list"></ul>
+      <h3>Compare recipes</h3>
+      <div class="comparison-wrapper" id="recipe-comparison"></div>
       <div class="portion" id="portion-estimate"></div>
     </section>
 
@@ -163,7 +164,7 @@ const oilError = app.querySelector("#oil-error");
 const oilTechniqueNote = app.querySelector("#oil-technique-note");
 const yieldControl = app.querySelector("#yield-control");
 const yieldError = app.querySelector("#yield-error");
-const ingredientList = app.querySelector("#ingredient-list");
+const comparisonContainer = app.querySelector("#recipe-comparison");
 const portionEstimate = app.querySelector("#portion-estimate");
 const predictionsContainer = app.querySelector("#predictions");
 const warningsContainer = app.querySelector("#warnings");
@@ -177,21 +178,48 @@ function formatRatio(ratio) {
   return ratio.toFixed(2);
 }
 
-function renderIngredientList(recipe, ratios) {
-  ingredientList.innerHTML = recipe.ingredients
-    .filter((ingredient) => ingredient.grams !== 0)
-    .map(
-      (ingredient) => `
-        <li class="ingredient">
-          <span>${ingredient.name}</span>
-          <span class="ingredient-values">
-            <strong>${formatGrams(ingredient.grams)} g</strong>
-            <small>Ratio ${formatRatio(ratios[ingredient.id])}</small>
-          </span>
-        </li>
-      `
-    )
-    .join("");
+function formatDifference(grams) {
+  if (grams === 0) return "0 g";
+  return `${grams > 0 ? "+" : ""}${formatGrams(grams)} g`;
+}
+
+function renderComparison(rows) {
+  comparisonContainer.innerHTML = `
+    <table class="comparison-table">
+      <caption>Control and experiment ingredients at the selected yield</caption>
+      <thead>
+        <tr>
+          <th scope="col">Ingredient</th>
+          <th scope="col">Control</th>
+          <th scope="col">Experiment</th>
+          <th scope="col">Change</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows
+          .map(
+            ({ name, control, experiment: current, differenceGrams, changed }) => `
+              <tr class="${changed ? "is-changed" : ""}">
+                <th scope="row">${name}</th>
+                <td data-label="Control">
+                  <strong>${formatGrams(control.grams)} g</strong>
+                  <small>Ratio ${formatRatio(control.ratio)}</small>
+                </td>
+                <td data-label="Experiment">
+                  <strong>${formatGrams(current.grams)} g</strong>
+                  <small>Ratio ${formatRatio(current.ratio)}</small>
+                </td>
+                <td data-label="Change">
+                  <strong>${changed ? "Changed" : "No change"}</strong>
+                  <small>${formatDifference(differenceGrams)}</small>
+                </td>
+              </tr>
+            `
+          )
+          .join("")}
+      </tbody>
+    </table>
+  `;
 }
 
 function renderPortionEstimate(portion) {
@@ -265,7 +293,7 @@ function renderPredictions(predictionGroups) {
 
 function updateExperiment(announcement) {
   const result = evaluateExperiment(experiment);
-  renderIngredientList(result.recipe, result.ratios);
+  renderComparison(compareExperimentToControl(experiment));
   renderPortionEstimate(result.portion);
   renderWarnings(result.warnings);
   renderPredictions(result.predictionGroups);
