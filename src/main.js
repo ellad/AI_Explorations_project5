@@ -3,7 +3,8 @@ import {
   evaluateExperiment,
   buildTextureRatios,
   supportedLimits,
-  validateCookieCount
+  validateCookieCount,
+  validateOilReplacement
 } from "./model/predictionRules.js";
 
 const app = document.querySelector("#app");
@@ -12,6 +13,7 @@ let experiment = {
   butterRatio: 0.7687,
   butterCustomized: false,
   cornSyrupPercent: 0,
+  oilReplacementPercent: 0,
   cookieCount: 24
 };
 
@@ -60,7 +62,7 @@ app.innerHTML = `
 
         <div class="control-group">
           <div class="control-heading">
-            <label for="butter-ratio-control">Butter ratio</label>
+            <label for="butter-ratio-control">Butter ratio before oil replacement</label>
             <span>Control: 0.77 to flour's 1.0</span>
           </div>
           <input
@@ -88,6 +90,26 @@ app.innerHTML = `
             aria-describedby="corn-syrup-help"
           />
           <p id="corn-syrup-help">Supported prediction range: 0–10% of total sugar.</p>
+        </div>
+
+        <div class="control-group">
+          <div class="control-heading">
+            <label for="oil-control">Butter replaced with vegetable oil (%)</label>
+            <span>Equal volume: oil uses about 88% of the replaced butter weight</span>
+          </div>
+          <input
+            id="oil-control"
+            type="number"
+            inputmode="decimal"
+            step="1"
+            value="0"
+            aria-describedby="oil-help oil-technique-note oil-error"
+          />
+          <p id="oil-help">Supported replacement range: 0–100%.</p>
+          <p class="technique-note" id="oil-technique-note" hidden>
+            Prediction condition: chill the shaped dough for 30 minutes before baking.
+          </p>
+          <p class="field-error" id="oil-error" aria-live="polite"></p>
         </div>
 
         <div class="control-group">
@@ -136,6 +158,9 @@ const butterRatioControl = app.querySelector("#butter-ratio-control");
 const textureControl = app.querySelector("#texture-control");
 const textureStatus = app.querySelector("#texture-status");
 const cornSyrupControl = app.querySelector("#corn-syrup-control");
+const oilControl = app.querySelector("#oil-control");
+const oilError = app.querySelector("#oil-error");
+const oilTechniqueNote = app.querySelector("#oil-technique-note");
 const yieldControl = app.querySelector("#yield-control");
 const yieldError = app.querySelector("#yield-error");
 const ingredientList = app.querySelector("#ingredient-list");
@@ -154,7 +179,7 @@ function formatRatio(ratio) {
 
 function renderIngredientList(recipe, ratios) {
   ingredientList.innerHTML = recipe.ingredients
-    .filter((ingredient) => ingredient.id !== "corn-syrup" || ingredient.grams !== 0)
+    .filter((ingredient) => ingredient.grams !== 0)
     .map(
       (ingredient) => `
         <li class="ingredient">
@@ -244,7 +269,10 @@ function updateExperiment(announcement) {
   renderPortionEstimate(result.portion);
   renderWarnings(result.warnings);
   renderPredictions(result.predictionGroups);
-  const customized = experiment.butterCustomized || experiment.cornSyrupPercent !== 0;
+  const customized =
+    experiment.butterCustomized ||
+    experiment.cornSyrupPercent !== 0 ||
+    experiment.oilReplacementPercent !== 0;
   const positionName =
     experiment.texturePosition < 0
       ? "Thin and crispy direction"
@@ -308,17 +336,40 @@ cornSyrupControl.addEventListener("input", () => {
   );
 });
 
+oilControl.addEventListener("input", () => {
+  const validation = validateOilReplacement(oilControl.value);
+  if (!validation.valid) {
+    oilControl.setAttribute("aria-invalid", "true");
+    oilError.textContent = validation.message;
+    status.textContent = validation.message;
+    return;
+  }
+
+  oilControl.removeAttribute("aria-invalid");
+  oilError.textContent = "";
+  oilTechniqueNote.hidden = validation.value === 0;
+  experiment = { ...experiment, oilReplacementPercent: validation.value };
+  updateExperiment(
+    `Vegetable oil replacement updated to ${validation.value}% of the butter. Predictions updated.`
+  );
+});
+
 app.querySelector("#reset-recipe").addEventListener("click", (event) => {
   experiment = {
     texturePosition: 0,
     butterRatio: 0.7687,
     butterCustomized: false,
     cornSyrupPercent: 0,
+    oilReplacementPercent: 0,
     cookieCount: 24
   };
   textureControl.value = "0";
   butterRatioControl.value = "0.7687";
   cornSyrupControl.value = "0";
+  oilControl.value = "0";
+  oilControl.removeAttribute("aria-invalid");
+  oilError.textContent = "";
+  oilTechniqueNote.hidden = true;
   yieldControl.value = "24";
   yieldControl.removeAttribute("aria-invalid");
   yieldError.textContent = "";

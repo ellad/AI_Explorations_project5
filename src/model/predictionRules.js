@@ -11,6 +11,7 @@ export const supportedLimits = Object.freeze({
   butterRatio: Object.freeze({ minimum: 0.5765, control: 0.7687, maximum: 0.9609 }),
   texturePosition: Object.freeze({ crispy: -1, control: 0, dense: 1 }),
   cornSyrupPercent: Object.freeze({ minimum: 0, maximum: 10 }),
+  oilReplacementPercent: Object.freeze({ minimum: 0, maximum: 100 }),
   controlCookieCount: CONTROL_COOKIE_COUNT,
   controlPortionGrams: CONTROL_DOUGH_GRAMS / CONTROL_COOKIE_COUNT
 });
@@ -20,6 +21,7 @@ const CONTROL_BROWN_SHARE = 165 / 315;
 const CONTROL_EGG_RATIO = 100 / CONTROL_FLOUR_GRAMS;
 const CONTROL_SODA_RATIO = 6 / CONTROL_FLOUR_GRAMS;
 const DENSE_BUTTER_RATIO = 1 / 1.6;
+const OIL_TO_BUTTER_WEIGHT_RATIO = 198 / 226;
 
 export function validateCookieCount(cookieCount) {
   const numericCookieCount = Number(cookieCount);
@@ -32,6 +34,19 @@ export function validateCookieCount(cookieCount) {
   }
 
   return { valid: true, value: numericCookieCount, message: "" };
+}
+
+export function validateOilReplacement(oilReplacementPercent) {
+  if (String(oilReplacementPercent).trim() === "") {
+    return { valid: false, message: "Oil replacement must be between 0% and 100%." };
+  }
+  const numericPercent = Number(oilReplacementPercent);
+
+  if (!Number.isFinite(numericPercent) || numericPercent < 0 || numericPercent > 100) {
+    return { valid: false, message: "Oil replacement must be between 0% and 100%." };
+  }
+
+  return { valid: true, value: numericPercent, message: "" };
 }
 
 const controlRatios = Object.freeze(
@@ -220,15 +235,43 @@ function evaluateCornSyrup(cornSyrupPercent) {
   };
 }
 
-function buildRatios(butterRatio, cornSyrupPercent, texturePosition) {
+function evaluateOilReplacement(oilReplacementPercent) {
+  if (oilReplacementPercent === 0) return { predictions: [], warnings: [] };
+
+  return {
+    predictions: [
+      prediction(
+        "oil-replacement",
+        "Crisp to chewy",
+        "Crisper and less chewy",
+        "increase-crispness",
+        confidence.WELL_SUPPORTED,
+        "Independent cookie tests found that liquid oil produced a more uniform, crisper texture with less chewiness than creamed butter."
+      ),
+      prediction(
+        "oil-replacement",
+        "Spread and thickness",
+        "More spread and a thinner cookie",
+        "increase-spread",
+        confidence.LIKELY,
+        "A chocolate-chip-cookie test found that equal-volume liquid oil produced the most spread of the fats tested after a 30-minute chill."
+      )
+    ],
+    warnings: []
+  };
+}
+
+function buildRatios(butterRatio, cornSyrupPercent, texturePosition, oilReplacementPercent) {
   const textureRatios = buildTextureRatios(texturePosition);
   const totalSugarRatio = textureRatios["granulated-sugar"] + textureRatios["brown-sugar"];
   const cornSyrupRatio = totalSugarRatio * (cornSyrupPercent / 100);
+  const oilShare = oilReplacementPercent / 100;
 
   return {
     ...controlRatios,
     ...textureRatios,
-    butter: butterRatio,
+    butter: butterRatio * (1 - oilShare),
+    "vegetable-oil": butterRatio * oilShare * OIL_TO_BUTTER_WEIGHT_RATIO,
     "granulated-sugar": textureRatios["granulated-sugar"] - cornSyrupRatio,
     "corn-syrup": cornSyrupRatio
   };
@@ -242,6 +285,7 @@ function buildScaledRecipe(ratios, cookieCount) {
     controlRecipe.ingredients.map((ingredient) => [ingredient.id, ingredient.name])
   );
   ingredientNames["corn-syrup"] = "Corn syrup";
+  ingredientNames["vegetable-oil"] = "Vegetable oil";
 
   return {
     ingredients: Object.entries(ratios).map(([id, ratio]) => ({
@@ -262,12 +306,26 @@ function findCompetingEffects(predictions) {
     return [];
   }
 
+  const names = {
+    "butter-ratio": "Butter ratio",
+    "corn-syrup": "Corn syrup",
+    "oil-replacement": "Vegetable oil substitution",
+    "texture-control": "Grouped texture control"
+  };
+  const increasing = spreadPredictions
+    .filter(({ effect }) => effect === "increase-spread")
+    .map(({ rule }) => names[rule])
+    .join(" and ");
+  const decreasing = spreadPredictions
+    .filter(({ effect }) => effect === "decrease-spread")
+    .map(({ rule }) => names[rule])
+    .join(" and ");
+
   return [
     {
       quality: "Spread and thickness",
       heading: "Competing effects on spread",
-      explanation:
-        "Less butter may reduce spread, while corn syrup may increase it. The available evidence does not support predicting which effect will dominate."
+      explanation: `${decreasing} may reduce spread, while ${increasing} may increase it. The available evidence does not support predicting which effect will dominate.`
     }
   ];
 }
@@ -275,10 +333,15 @@ function findCompetingEffects(predictions) {
 const variableNames = Object.freeze({
   "butter-ratio": "Butter ratio",
   "corn-syrup": "Corn syrup",
+  "oil-replacement": "Vegetable oil substitution",
   "texture-control": "Grouped texture control"
 });
 
 function summarizeDirection(quality, effects) {
+  if (effects.has("increase-spread") && effects.has("decrease-spread")) {
+    return "Competing effects";
+  }
+  if (effects.has("uncertain-spread")) return "Spread direction uncertain";
   if (effects.size > 1) return "Competing effects";
   const [effect] = effects;
   const summaries = {
@@ -322,10 +385,17 @@ export function evaluateExperiment({
   butterRatio,
   butterCustomized = false,
   cornSyrupPercent = 0,
+  oilReplacementPercent = 0,
   cookieCount = CONTROL_COOKIE_COUNT,
   texturePosition = supportedLimits.texturePosition.control
 } = {}) {
+  const oilValidation = validateOilReplacement(oilReplacementPercent);
+  if (!oilValidation.valid) {
+    throw new RangeError(oilValidation.message);
+  }
+
   const numericCornSyrupPercent = Number(cornSyrupPercent);
+  const numericOilReplacementPercent = Number(oilReplacementPercent);
   const numericCookieCount = Number(cookieCount);
   const numericTexturePosition = Number(texturePosition);
   const mappedButterRatio = buildTextureRatios(numericTexturePosition).butter;
@@ -334,6 +404,7 @@ export function evaluateExperiment({
   if (
     !Number.isFinite(numericButterRatio) ||
     !Number.isFinite(numericCornSyrupPercent) ||
+    !Number.isFinite(numericOilReplacementPercent) ||
     !Number.isFinite(numericCookieCount) ||
     !Number.isFinite(numericTexturePosition)
   ) {
@@ -345,7 +416,12 @@ export function evaluateExperiment({
     throw new RangeError(cookieCountValidation.message);
   }
 
-  const ratios = buildRatios(numericButterRatio, numericCornSyrupPercent, numericTexturePosition);
+  const ratios = buildRatios(
+    numericButterRatio,
+    numericCornSyrupPercent,
+    numericTexturePosition,
+    numericOilReplacementPercent
+  );
   const recipe = buildScaledRecipe(ratios, numericCookieCount);
   const totalDoughGrams = recipe.ingredients.reduce(
     (total, ingredient) => total + ingredient.grams,
@@ -353,11 +429,13 @@ export function evaluateExperiment({
   );
   const butterResult = evaluateButterRatio(numericButterRatio);
   const cornSyrupResult = evaluateCornSyrup(numericCornSyrupPercent);
+  const oilResult = evaluateOilReplacement(numericOilReplacementPercent);
   const texturePredictions = evaluateTexturePosition(numericTexturePosition);
   const predictions = [
     ...(numericTexturePosition === 0 || butterCustomized ? butterResult.predictions : []),
     ...texturePredictions,
-    ...cornSyrupResult.predictions
+    ...cornSyrupResult.predictions,
+    ...oilResult.predictions
   ].sort(
     (first, second) =>
       confidencePriority[first.evidence] - confidencePriority[second.evidence]
@@ -375,6 +453,6 @@ export function evaluateExperiment({
     predictions,
     conflicts,
     predictionGroups: groupPredictions(predictions, conflicts),
-    warnings: [...butterResult.warnings, ...cornSyrupResult.warnings]
+    warnings: [...butterResult.warnings, ...cornSyrupResult.warnings, ...oilResult.warnings]
   };
 }

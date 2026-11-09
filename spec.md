@@ -45,6 +45,14 @@ Add one keyboard-accessible texture control that moves the control recipe toward
 
 This checkpoint does not add the butter-to-oil substitution, comparison history, test-bake photographs, or final visual branding.
 
+### Phase 3 butter-to-oil goal
+
+**Status:** Implemented and verified by the Developer on 2026-11-09; oil test-bake validation remains scheduled before final delivery.
+
+Add a keyboard-accessible control for replacing some or all of the current formula's butter with vegetable oil. The control is expressed as the percentage of butter replaced so a home baker can understand the input; the model performs an equal-volume conversion internally. The substitution remains independent from the grouped texture control because oil also changes aeration and handling.
+
+This checkpoint does not claim that oil and butter are interchangeable in flavor, creaming behavior, or measured spread.
+
 ## Behavior and acceptance checks
 
 For each feature or behavior you are building, describe what it should do and what counts as working, including failure cases and accessibility where they apply. Distinguish approved behavior from provisional ideas, and leave untested details open until they are needed.
@@ -78,6 +86,23 @@ The User can replace 0–10% of total sugar with corn syrup. Corn syrup replaces
 - Chewiness and moisture are labeled **Likely**. Spread is labeled **Uncertain** because the reviewed sources do not agree strongly enough to support a higher-confidence label.
 - Returning the substitution to 0 restores 150 g granulated sugar and removes its predictions.
 - Above 10%, preserve the entered value but show that the model cannot reliably predict the result. Do not generate an in-range prediction for it.
+
+### Butter-to-vegetable-oil substitution — Phase 3
+
+The User can replace 0–100% of the current formula's butter with vegetable oil. The percentage applies to the butter amount established by the grouped texture control or individual butter-ratio adjustment.
+
+- For a replacement percentage `p`, remaining butter is `current butter × (1 − p)` and vegetable oil is `current butter × p × (198 ÷ 226)`.
+- The `198 ÷ 226`, or approximately `0.88`, conversion preserves equal volume using King Arthur Baking's gram weights for one cup of vegetable oil and the control's one-cup butter weight. King Arthur's chocolate-chip-cookie test substituted fats by equal volume.
+- At 0%, the oil ingredient is omitted and the formula and predictions remain unchanged.
+- From 0–100%, the ingredient list shows butter and vegetable oil separately and preserves their ratios when yield changes.
+- A supported substitution predicts a crisper, less-chewy cookie with **Well supported** evidence because independent King Arthur and Serious Eats tests agree on that direction.
+- It predicts more spread/a thinner cookie with **Likely** evidence based on King Arthur's chocolate-chip-cookie test.
+- Values below 0% or above 100% are invalid. Show a visible inline error, mark the field invalid, and retain the last valid recipe.
+- When oil is nonzero, state that the shaped dough should chill for 30 minutes before baking. The strongest chocolate-chip-cookie evidence used that condition, and the oil dough needed chilling to hold its shape.
+- A full oil replacement removes butter, but the interface must not call the complete recipe dairy-free unless the chocolate morsels are also verified as dairy-free.
+- Changing oil marks the grouped formula as **Customized**. Moving the grouped texture control reapplies its linked ratios but preserves the independent oil percentage, so the formula remains customized while oil is nonzero.
+- Reset returns oil to 0%, restores the full control butter amount, clears oil warnings and errors, and removes oil predictions.
+- Oil effects join the existing prediction card for each quality. Contributor-level evidence remains visible, and opposing supported directions use the approved **Competing effects** presentation.
 
 ### Combined changes
 

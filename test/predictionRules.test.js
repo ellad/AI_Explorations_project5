@@ -4,7 +4,8 @@ import {
   buildTextureRatios,
   evaluateExperiment,
   supportedLimits,
-  validateCookieCount
+  validateCookieCount,
+  validateOilReplacement
 } from "../src/model/predictionRules.js";
 
 function amount(result, id) {
@@ -80,6 +81,69 @@ test("texture positions outside the grouped range fail explicitly", () => {
   for (const texturePosition of [-1.1, 1.1]) {
     assert.throws(() => buildTextureRatios(texturePosition), /between -1 and 1/);
   }
+});
+
+test("oil replacement uses the approved equal-volume conversion through full replacement", () => {
+  const result = evaluateExperiment({ oilReplacementPercent: 100 });
+  const originalButterRatio = supportedLimits.butterRatio.control;
+
+  assert.equal(result.ratios.butter, 0);
+  assert.equal(result.ratios["vegetable-oil"], originalButterRatio * (198 / 226));
+  assert.deepEqual(
+    result.predictions.filter(({ rule }) => rule === "oil-replacement").map(({ quality, evidence }) => [quality, evidence]),
+    [
+      ["Crisp to chewy", "Well supported"],
+      ["Spread and thickness", "Likely"]
+    ]
+  );
+});
+
+test("oil replacements between 75% and 100% remain supported", () => {
+  const result = evaluateExperiment({ oilReplacementPercent: 80 });
+
+  assert.ok(result.ratios.butter > 0);
+  assert.ok(result.ratios["vegetable-oil"] > 0);
+  assert.equal(result.predictions.filter(({ rule }) => rule === "oil-replacement").length, 2);
+  assert.equal(result.warnings.length, 0);
+});
+
+test("oil validation rejects values that cannot represent a partial replacement", () => {
+  assert.deepEqual(validateOilReplacement("50"), { valid: true, value: 50, message: "" });
+  for (const oilReplacementPercent of [-1, 101, "not a number", ""]) {
+    assert.equal(validateOilReplacement(oilReplacementPercent).valid, false);
+    assert.throws(
+      () => evaluateExperiment({ oilReplacementPercent }),
+      /finite numbers|between 0% and 100%/
+    );
+  }
+});
+
+test("oil replacement follows grouped butter ratios and scales with yield", () => {
+  const twelve = evaluateExperiment({
+    texturePosition: 1,
+    oilReplacementPercent: 50,
+    cookieCount: 12
+  });
+  const twentyFour = evaluateExperiment({
+    texturePosition: 1,
+    oilReplacementPercent: 50,
+    cookieCount: 24
+  });
+
+  assert.equal(twentyFour.ratios.butter, (1 / 1.6) * 0.5);
+  assert.equal(twentyFour.ratios["vegetable-oil"], (1 / 1.6) * 0.5 * (198 / 226));
+  assert.ok(Math.abs(amount(twelve, "butter") - amount(twentyFour, "butter") / 2) <= 0.051);
+  assert.ok(
+    Math.abs(amount(twelve, "vegetable-oil") - amount(twentyFour, "vegetable-oil") / 2) <=
+      0.051
+  );
+  const chewyGroup = twentyFour.predictionGroups.find(
+    ({ quality }) => quality === "Crisp to chewy"
+  );
+  assert.equal(
+    chewyGroup.contributors.some(({ variable }) => variable === "Vegetable oil substitution"),
+    true
+  );
 });
 
 test("control ratios reproduce the approved 24-cookie recipe", () => {
@@ -176,7 +240,7 @@ test("opposing spread predictions produce a competing-effects explanation", () =
       quality: "Spread and thickness",
       heading: "Competing effects on spread",
       explanation:
-        "Less butter may reduce spread, while corn syrup may increase it. The available evidence does not support predicting which effect will dominate."
+        "Butter ratio may reduce spread, while Corn syrup may increase it. The available evidence does not support predicting which effect will dominate."
     }
   ]);
   const spreadGroup = result.predictionGroups.find(

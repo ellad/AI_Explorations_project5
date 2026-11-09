@@ -44,6 +44,24 @@ The next few results to build, each with what it should produce and how you will
 
 **Result, 2026-11-09:** Complete. The grouped control applies the approved butter, sugar, egg, and baking-soda mappings; manual refinements are identified as customized; corn syrup remains independent; and predictions are grouped by quality with contributor-level evidence and explicit competing effects. The Developer passed the endpoint, midpoint, customization, reset, keyboard, and combined-change scenarios. After direct testing, the Developer requested a full-width palette-matched slider and consolidated prediction cards; the revisions were implemented and approved. `npm test` passes all 20 tests and `npm run build` succeeds.
 
+### Phase 3, Checkpoint 2 — Butter-to-vegetable-oil substitution
+
+**Result:** A keyboard-accessible percentage control replaces up to 100% of the current formula's butter with vegetable oil using the approved equal-volume conversion. Supported substitutions update the recipe, technique condition, and grouped prediction cards; invalid inputs follow the inline-error behavior in `spec.md`.
+
+**Tests:**
+
+- Verify 0%, a supported partial replacement, 100%, and invalid values below 0% or above 100%.
+- Verify remaining butter and oil ratios, the `198 ÷ 226` equal-volume conversion, yield scaling, grouped-texture interaction, customization status, and reset.
+- Verify well-supported crisper/less-chewy output, likely increased-spread output, the 30-minute chilling condition, contributor-level evidence, and combinations with existing rules.
+- Confirm visible validation, keyboard operation, text labels, and live update announcements.
+- Run all automated tests and the production build before direct Developer testing.
+
+**Stop condition:** Do not begin comparison-history or broader visual-design work until the Developer verifies the oil substitution and decides that its conversion, limitations, and predictions are understandable.
+
+**Required follow-up test bake before final delivery:** Compare the butter control with at least one partial oil replacement and a 100% oil replacement. Use the displayed gram amounts, chill the shaped dough for 30 minutes, and keep portion weight, pan, oven temperature, and bake time consistent. Record dough handling, cookie diameter, thickness, edge/center texture, and perceived chewiness after cooling. Use the result to confirm or revise the current oil spread and crispness predictions; published evidence directly supports full replacement but not the partial percentages.
+
+**Result, 2026-11-09:** Complete with the documented test-bake follow-up still open. The interface supports 0–100% replacement using the equal-volume `198 ÷ 226` conversion, shows butter and oil separately, includes the 30-minute chilling condition, validates impossible percentages, preserves oil through grouped-texture changes, consolidates oil evidence into the prediction cards, and resets cleanly. After reviewing additional Developer-supplied sources, the model was revised from a 75% cap and denser/chewier prediction to full replacement with the directly tested crisper/less-chewy and increased-spread directions. The Developer passed the control, partial, full, invalid-input, combined-change, yield, reset, and keyboard scenarios. `npm test` passes all 24 tests and `npm run build` succeeds.
+
 ### Checkpoint 1 — Project foundation and recipe state
 
 **Result:** A minimal Vite application loads the approved control recipe from structured JavaScript data and displays its ingredient weights. Reset restores a fresh copy of that control state.

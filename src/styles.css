@@ -234,6 +234,14 @@ h2 {
   font-weight: 700;
 }
 
+.control-group .technique-note {
+  padding: 0.6rem 0.7rem;
+  color: #36585b;
+  background: #e9f1f0;
+  border-left: 3px solid #486f73;
+  font-weight: 700;
+}
+
 input[aria-invalid="true"] {
   background: #fff4f1;
   border: 2px solid #8a3f2d;
