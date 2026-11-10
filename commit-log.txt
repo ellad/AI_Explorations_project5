@@ -4,12 +4,14 @@ Message:
 Complete Phase 1 ideation and pitch
 
 -----
+
 Commit: 536b8de417e2a691ae66c9ee2d568ce081302254
 Date: 2026-10-30T11:29:13-05:00
 Message:
 Export commit log and save transcript
 
 -----
+
 Commit: 0419fb558dc1330a08c5e70d06ed09357b6f08ea
 Date: 2026-11-02T16:56:41-06:00
 Message:
@@ -22,6 +24,7 @@ weights cross-checked across several sources, and open research questions.
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
 
 -----
+
 Commit: f955fed0210fc1a59b5b7e5f430f92794f24cc1e
 Date: 2026-11-02T17:06:36-06:00
 Message:
@@ -35,6 +38,7 @@ slider as dense and chewy to thin and crispy.
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
 
 -----
+
 Commit: f0654e6c029a58e6a6623f97b11e029de979c3ca
 Date: 2026-11-02T17:20:16-06:00
 Message:
@@ -47,6 +51,7 @@ the recommendations and cut baking powder from the MVP.
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
 
 -----
+
 Commit: 29ff2dc60aac2c522c00c915c6056426b9efa025
 Date: 2026-11-02T17:54:52-06:00
 Message:
@@ -60,6 +65,7 @@ struck so the model reports three readouts.
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
 
 -----
+
 Commit: bda71899fe0a1f4cbdabb5be4e5e951c16b03bbb
 Date: 2026-11-02T18:02:49-06:00
 Message:
@@ -71,5 +77,58 @@ and Delcour claims as unverified and stop relying on them, and update the
 scope-changes log.
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+-----
+
+Commit: bf70daf7d96dc8507ed176e1d44f6db2acaab1cf
+Date: 2026-11-02T18:06:40-06:00
+Message:
+Export commit log and save Phase 2 research transcript
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+-----
+
+Commit: d8bc44f7e070f14c951f607e2da530641d0f0c22
+Date: 2026-11-06T16:02:14-06:00
+Message:
+Build and validate Phase 2 prediction core
+
+Add the Vite application, ratio-based recipe model, yield scaling, evidence-ranked predictions, accessible controls, automated tests, approved specification and plan updates, and the Phase 2 transcript.
+
+-----
+
+Commit: 71d1d918f9974c5ea15d6e2086d212fe9a4f5188
+Date: 2026-11-09T15:39:15-06:00
+Message:
+Close Phase 2 after accessibility verification
+
+-----
+
+Commit: ba98f6286c678ec4e395dd990e14c284896742c8
+Date: 2026-11-09T16:54:49-06:00
+Message:
+Add grouped texture experiment control
+
+-----
+
+Commit: 219cb23736ce02353a2b9d36e6e09d7d6eb03b69
+Date: 2026-11-09T17:38:16-06:00
+Message:
+Add full butter-to-oil substitution
+
+-----
+
+Commit: d6c24a76e3b532de94b2ddbabd862ea2901f669f
+Date: 2026-11-09T17:49:34-06:00
+Message:
+Add control and experiment comparison
+
+-----
+
+Commit: b659b962754f73add7832a8ec71ec3a04fdd45c7
+Date: 2026-11-09T18:14:21-06:00
+Message:
+Refine experiment controls for usability testing
 
 -----
