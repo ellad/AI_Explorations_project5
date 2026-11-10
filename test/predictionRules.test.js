@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   buildTextureRatios,
+  butterRatioFromSliderPosition,
   compareExperimentToControl,
   evaluateExperiment,
   supportedLimits,
@@ -107,6 +108,16 @@ test("intermediate texture positions interpolate ratios and soda follows brown s
     halfwayDense["baking-soda"] / (6 / 294),
     halfwayDense["brown-sugar"] / (165 / 294)
   );
+});
+
+test("the shared 21-position slider scale increases from dense through control to crispy", () => {
+  const positions = Array.from({ length: 21 }, (_, index) => Number((-1 + index / 10).toFixed(1)));
+  const butterRatios = positions.map((position) => butterRatioFromSliderPosition(position));
+
+  assert.equal(butterRatios[0], 1 / 1.6);
+  assert.equal(butterRatios[10], supportedLimits.butterRatio.control);
+  assert.equal(butterRatios[20], supportedLimits.butterRatio.maximum);
+  assert.equal(new Set(butterRatios).size, 21);
 });
 
 test("a manual butter refinement remains visible alongside grouped predictions", () => {

@@ -110,6 +110,10 @@ export function buildTextureRatios(texturePosition = 0) {
   };
 }
 
+export function butterRatioFromSliderPosition(sliderPosition = 0) {
+  return buildTextureRatios(-Number(sliderPosition)).butter;
+}
+
 function evaluateTexturePosition(texturePosition) {
   if (texturePosition === 0) return [];
   const crispy = texturePosition < 0;

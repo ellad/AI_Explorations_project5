@@ -59,6 +59,12 @@ This checkpoint does not claim that oil and butter are interchangeable in flavor
 
 Replace the current single-recipe ingredient list with one responsive comparison table that lets the User scan the control and experiment row by row. The comparison should make formula changes understandable without duplicating the full recipe elsewhere on the page.
 
+### Phase 3 compact-controls goal
+
+**Status:** Implemented and verified by the Developer on 2026-11-09.
+
+Replace the butter-ratio, corn-syrup, and vegetable-oil number fields with compact range controls. Keep desired cookie count as a number field because its useful range is open-ended. The redesign should reduce interface height without hiding current values, limits, or keyboard operation.
+
 ## Behavior and acceptance checks
 
 For each feature or behavior you are building, describe what it should do and what counts as working, including failure cases and accessibility where they apply. Distinguish approved behavior from provisional ideas, and leave untested details open until they are needed.
@@ -150,7 +156,8 @@ The approved control recipe establishes a default yield of 24 cookies and an int
 - The system normalizes the current ratios across that target dough weight, so every ingredient amount scales and the selected ratios remain unchanged.
 - At the control formula and a yield of 24, the interface reports approximately 54 g of dough per cookie.
 - Clearly describe the result as an estimate because ingredient loss and measurement variation can change the actual dough weight.
-- Do not provide a tablespoon or scoop-volume conversion until one is supported by research or direct measurement.
+- Instruct the User to portion with a level #24 cookie scoop onto a parchment-lined baking sheet. Treat this as the standard preparation method, not an exact conversion between scoop volume and dough weight.
+- Keep grams as the calculation source of truth; do not claim that every #24 scoop holds the estimated gram amount without direct measurement.
 - Changing only the yield scales every ingredient by the same factor and does not change any texture prediction.
 
 ### Control-versus-experiment comparison — Phase 3
@@ -189,6 +196,22 @@ The table has one row per ingredient and three data columns: **Control**, **Expe
 - Prediction updates are announced to assistive technology without unexpectedly moving keyboard focus.
 - Reset is a labeled button and restores the complete control state in one action.
 - Invalid yields show a visible inline error, mark and visibly highlight the field as invalid, retain the last valid recipe, and clear the error when the User enters a positive whole number.
+
+### Compact adjustment controls — Phase 3
+
+- Butter ratio uses the same 21-position piecewise scale as the grouped texture control. It includes the exact control ratio at the center, runs from `0.6250` on the left to `0.9609` on the right, and maps every grouped-texture position to the same butter ratio. The interface range is narrower than the model's lower supported boundary so synchronization remains exact. Steps are intentionally not described as uniform percentages because each side interpolates between different researched reference points.
+- Corn syrup uses a `0–10%` range with `1%` steps.
+- Vegetable oil uses a `0–100%` range with `5%` steps.
+- Each control shows its current numeric value in a persistent text output that updates with the range.
+- Each track has concise endpoint labels; values and limits are not communicated by position or color alone.
+- Arrow keys operate every range using its defined step, and each range retains a visible focus indicator.
+- The established teal range styling is reused for all four sliders.
+- Moving the grouped texture control updates the butter-ratio slider and its text output to the mapped ratio.
+- Moving the individual butter-ratio slider marks the grouped formula as **Customized**.
+- Corn syrup and oil remain independent and continue to mark the formula as **Customized** when nonzero.
+- Reset restores the grouped midpoint, exact control butter ratio, 0% corn syrup, 0% oil, and 24 cookies.
+- Because the three replacement controls cannot leave their supported ranges, their former typed-input validation is not shown in the interface. Model-level range checks remain in place for stability and automated testing.
+- Desired cookie count retains its visible inline validation and last-valid-recipe behavior.
 
 ### Phase 2 completion checks
 

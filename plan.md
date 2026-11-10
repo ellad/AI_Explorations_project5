@@ -77,6 +77,22 @@ The next few results to build, each with what it should produce and how you will
 
 **Result, 2026-11-09:** Complete. The single-recipe list was replaced with a semantic comparison table showing control, experiment, signed gram difference, ratios, and explicit changed/no-change text. Control weights scale to the selected yield, so yield-only changes do not create false formula changes. Optional corn-syrup and vegetable-oil rows appear only when used, and narrow screens receive labeled stacked ingredient cards without horizontal page scrolling. The Developer passed the control, individual-change, grouped-control, yield-only, combined-change, reset, responsive, and accessibility checks. `npm test` passes all 27 tests and `npm run build` succeeds.
 
+### Phase 3, Checkpoint 4 — Compact slider controls
+
+**Result:** Butter ratio, corn syrup, and vegetable oil use compact, palette-matched range controls with visible current values and endpoint labels. Desired cookie count remains a validated number field. Existing recipe, comparison, prediction, customization, and reset behavior is preserved.
+
+**Tests:**
+
+- Verify every butter position matches the grouped texture control's piecewise ratio mapping and includes the exact control and supported endpoints.
+- Verify corn syrup steps from 0–10% by 1% and oil from 0–100% by 5%.
+- Verify grouped texture changes synchronize the butter slider and output; individual butter movement marks the formula customized.
+- Verify visible values, endpoint labels, arrow-key operation, focus indicators, live announcements, reset, and responsive spacing.
+- Run all automated tests and the production build before direct Developer testing.
+
+**Stop condition:** Do not begin formal usability testing until the Developer verifies that the compact controls remain understandable, precise enough, keyboard accessible, and visually balanced.
+
+**Result, 2026-11-09:** Complete. Butter ratio, corn syrup, and vegetable oil now use palette-matched range controls with persistent current values and compact labels; cookie count remains a validated number field. The butter slider shares the grouped control's 21-position piecewise mapping, increases conventionally from `0.6250` on the left through `0.7687` at center to `0.9609` on the right, and stays synchronized with grouped texture changes. Descriptive heading text was separated from value badges to prevent overlap. The portion estimate now states the standard level #24 scoop and parchment method without treating scoop volume as an exact weight conversion. The Developer passed endpoint, synchronization, keyboard, reset, prediction, comparison, portion, responsive, and focus checks. `npm test` passes all 28 tests and `npm run build` succeeds.
+
 ### Checkpoint 1 — Project foundation and recipe state
 
 **Result:** A minimal Vite application loads the approved control recipe from structured JavaScript data and displays its ingredient weights. Reset restores a fresh copy of that control state.
