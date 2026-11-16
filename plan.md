@@ -109,6 +109,37 @@ The next few results to build, each with what it should produce and how you will
 
 **Agent verification, 2026-11-16:** Implemented the prediction-led cookie stage, dynamic qualitative treatments, applicable callouts, responsive stacking, and the reorganized controls/comparison layout. Callouts now open accessible modal details containing the evidence and contributing adjustments, replacing the duplicated prediction list lower on the page. `npm test` passes all 28 tests, `npm run build` succeeds, the local Vite page returns HTTP 200, and `git diff --check` reports no whitespace errors. Direct browser review remains open because no browser or screenshot runner was available in the Agent environment.
 
+### Phase 4 feature priorities — approved 2026-11-16
+
+The Developer prioritized the following additions after receiving feedback. Plan and verify them as separate checkpoints rather than implementing them together.
+
+1. **Baking instructions:** Add the instructions required to complete the displayed recipe. Keep them synchronized with the experiment, including substitution-specific conditions such as the 30-minute chill for vegetable oil.
+2. **Estimated calories:** Show estimated calories for the complete recipe and per cookie. Choose and cite a nutrition-data source before specifying the calculation, and label the result as an estimate.
+3. **Weight/volume toggle:** Let Users switch ingredient measurements between weight and volume. Use ingredient-specific conversions supported by the King Arthur reference already recorded in `research.md`; research or withhold any conversion that reference does not support. Weight remains the calculation source of truth.
+4. **Curated upgrades:** Offer a fixed, researched list rather than unrestricted additions. The first candidates are browned butter, resting the dough, espresso powder, and toffee. Define each upgrade's amount or duration, instructions, expected effect, evidence, and compatibility with existing controls before implementation. Browned butter must account for its loss of water and cannot be treated as a flavor-only toggle.
+5. **Build my recipe:** After the curated upgrades, explore a guided flow in which Users choose a supported texture and add-ins to produce a recipe. Reuse supported recipe states and researched additions rather than generating unsupported formulas.
+
+**Scope rule:** Baking instructions, estimated calories, and the weight/volume toggle are planned Phase 4 work. Curated upgrades and Build my recipe are prioritized stretch features in that order. Completing the required Phase 4 work and preparing a stable peer-review version take precedence over either stretch feature.
+
+**Next planning checkpoint:** Before implementing baking instructions, specify the control recipe's complete method, identify which steps change for supported experiments, and define the acceptance checks for desktop, mobile, and assistive technology. Stop for Developer approval before implementation.
+
+### Phase 4, Checkpoint 2 — Recipe output and baking instructions
+
+**Result:** Add Recipe output and Baking instructions as two views in one result card. Recipe output contains formula comparison only. Baking instructions provides the nearest researched thin, control, or dense method, including its recommended portion, and revises the method for corn syrup and vegetable-oil substitutions. The requested cookie count scales ingredient weights using the instruction recipe's internal portion size.
+
+**Tests:**
+
+- Verify anchor selection at `-0.5`, `-0.4`, `0.4`, and `0.5`, plus reset.
+- Verify 25 g thin, exact control, and 125 g dense internal scaling for several cookie counts.
+- Verify corn-syrup placement, partial oil, full oil, and the oil-specific 30-minute chill.
+- Verify that changing any control updates both panels while preserving the selected tab.
+- Verify tab semantics, Left/Right Arrow behavior, focus visibility, narrow-screen layout, and readable instruction order.
+- Run the automated tests and production build before direct Developer testing.
+
+**Stop condition:** Do not mark the methods verified until the Developer reviews the interface and completes the planned thin, control, dense, partial-oil, and full-oil test bakes. Until then, label the combined methods as researched guidance requiring test-bake verification.
+
+**Developer review, 2026-11-16:** Desktop interface approved after revising the result tabs, restoring the established page layout, containing slider labels, simplifying the thin-cookie method, and clarifying partial-oil mixing. Mobile review remains pending deployment. Thin, control, dense, partial-oil, and full-oil test bakes remain required before the methods are marked verified.
+
 ### Checkpoint 1 — Project foundation and recipe state
 
 **Result:** A minimal Vite application loads the approved control recipe from structured JavaScript data and displays its ingredient weights. Reset restores a fresh copy of that control state.

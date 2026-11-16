@@ -1,4 +1,5 @@
 import { controlRecipe } from "../data/controlRecipe.js";
+import { getRecipeAnchor } from "./recipeInstructions.js";
 
 const CONTROL_FLOUR_GRAMS = 294;
 const CONTROL_COOKIE_COUNT = 24;
@@ -281,8 +282,8 @@ function buildRatios(butterRatio, cornSyrupPercent, texturePosition, oilReplacem
   };
 }
 
-function buildScaledRecipe(ratios, cookieCount) {
-  const targetDoughGrams = supportedLimits.controlPortionGrams * cookieCount;
+function buildScaledRecipe(ratios, cookieCount, portionGrams) {
+  const targetDoughGrams = portionGrams * cookieCount;
   const ratioTotal = Object.values(ratios).reduce((total, ratio) => total + ratio, 0);
   const gramsPerRatioUnit = targetDoughGrams / ratioTotal;
   const ingredientNames = Object.fromEntries(
@@ -426,7 +427,8 @@ export function evaluateExperiment({
     numericTexturePosition,
     numericOilReplacementPercent
   );
-  const recipe = buildScaledRecipe(ratios, numericCookieCount);
+  const recipeAnchor = getRecipeAnchor(numericTexturePosition);
+  const recipe = buildScaledRecipe(ratios, numericCookieCount, recipeAnchor.portionGrams);
   const totalDoughGrams = recipe.ingredients.reduce(
     (total, ingredient) => total + ingredient.grams,
     0
@@ -452,7 +454,8 @@ export function evaluateExperiment({
     portion: {
       cookieCount: numericCookieCount,
       totalDoughGrams,
-      gramsPerCookie: totalDoughGrams / numericCookieCount
+      gramsPerCookie: totalDoughGrams / numericCookieCount,
+      recipeAnchor: recipeAnchor.id
     },
     predictions,
     conflicts,

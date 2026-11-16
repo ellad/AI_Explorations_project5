@@ -412,11 +412,18 @@ button.prediction-callout:focus-visible {
 .range-labels {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.25rem;
   margin-top: 0.35rem;
   color: #6a574b;
   font-size: 0.78rem;
   font-weight: 700;
+}
+
+.texture-labels span,
+.range-labels span {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .texture-labels span:nth-child(2),
@@ -564,6 +571,71 @@ input[aria-invalid="true"]:focus-visible {
 
 .comparison-wrapper {
   margin-top: 0.75rem;
+}
+
+.recipe-tabs {
+  display: flex;
+  gap: 0;
+  margin: 1.5rem 0;
+  border-bottom: 1px solid #927d6d;
+}
+
+.recipe-tab {
+  min-height: 44px;
+  padding: 0.7rem 1rem;
+  color: #6a574b;
+  background: transparent;
+  border: 0;
+  border-bottom: 4px solid transparent;
+  border-radius: 0;
+}
+
+.recipe-tab:hover {
+  color: #36585b;
+  background: #f7f1e8;
+  border-color: transparent;
+}
+
+.recipe-tab[aria-selected="true"] {
+  color: #36585b;
+  border-bottom-color: #486f73;
+}
+
+.panel-title {
+  margin-bottom: 0.35rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 4vw, 1.8rem);
+}
+
+.instruction-summary {
+  max-width: 48rem;
+  color: #526260;
+}
+
+.instruction-list {
+  display: grid;
+  gap: 0.8rem;
+  max-width: 52rem;
+  margin: 1.25rem 0;
+  padding-left: 1.5rem;
+}
+
+.instruction-list li {
+  padding-left: 0.35rem;
+}
+
+.instruction-list li::marker {
+  color: #486f73;
+  font-weight: 800;
+}
+
+.method-note {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  color: #526260;
+  background: #e9f1f0;
+  border-left: 4px solid #486f73;
+  font-size: 0.88rem;
 }
 
 .comparison-table {

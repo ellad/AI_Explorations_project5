@@ -167,7 +167,7 @@ The approved control recipe establishes a default yield of 24 cookies and an int
 The table has one row per ingredient and three data columns: **Control**, **Experiment**, and **Change**.
 
 - Control and experiment use the same selected cookie count so the weights are directly comparable.
-- Each control and experiment cell shows grams first and the flour-relative ratio second.
+- Each control and experiment cell shows grams first and the flour-relative ratio rounded to one decimal place second. Calculations retain full internal precision.
 - The change cell shows the signed gram difference and a visible **Changed** label when the formula ratio differs; rows whose flour-relative ratio is unchanged say **Same ratio**, even if normalization slightly changes their displayed gram weights.
 - A change caused only by selecting another yield does not mark every ingredient as changed because both columns scale to that yield.
 - Corn syrup and vegetable oil appear when present in the experiment. Their control value is `0 g` and ratio `0.00`.
@@ -230,6 +230,19 @@ The interface uses a central illustrated cookie to make the current qualitative 
 - Warnings, the results-vary disclaimer, comparison table, and live announcements remain in the page. Detailed evidence labels and explanations live in the callout dialogs instead of a duplicated prediction list below the page.
 - At narrow widths, callouts stack without overlapping the cookie or causing horizontal page scrolling.
 - Reset restores the neutral control cookie and removes adjustment-specific callouts.
+
+### Recipe output and baking instructions — Phase 4
+
+The recipe result card has two keyboard-accessible tabs: **Recipe output** and **Baking instructions**. Recipe output retains the control-versus-experiment ratios and scaled ingredient weights. Baking instructions shows a complete method derived from the same experiment state. Changing a control updates both panels without changing the selected tab.
+
+- The User's cookie count remains the yield input. Each instruction recipe supplies an internal recommended portion weight used to calculate the total dough required for that count; portion guidance appears only in Baking instructions, not in Recipe output.
+- Baking instructions round the displayed recommended portion to the nearest `0.5 g`; scaling calculations retain the anchor's full internal precision.
+- The nearest researched recipe anchor supplies the method: positions `-1.0` through `-0.5` use thin-and-crispy guidance and approximately 25 g portions; `-0.4` through `0.4` use the control method and the exact internal `1292 ÷ 24` portion; `0.5` through `1.0` use dense-and-chewy guidance and approximately 125 g portions.
+- Recipe output compares the same requested cookie count. Because recipe styles use different recommended portions, control and experiment columns may represent different total dough weights. **Changed** and **Same ratio** continue to describe flour-relative formula ratios; signed gram differences include both formula and recipe-size effects.
+- Instructions cover pan preparation, mixing, portioning, shaping, spacing, chilling, oven temperature, timing, doneness, and cooling. They are paraphrased Half Baked methods informed by the sources in `research.md`, not copies or claims to reproduce Tate's or Levain Bakery formulas.
+- Corn syrup is incorporated with the sugars. For partial oil replacement, the softened butter, oil, and sugars are beaten together only until combined; full oil replaces creaming language. Any nonzero oil replacement adds a 30-minute chill after portioning.
+- The interface states that these combined methods require direct test-bake verification. Do not present the timing or outcome as guaranteed.
+- Tabs support click, `Tab`, Left Arrow, and Right Arrow operation with correct tab and tabpanel semantics. Both views remain usable at narrow widths without horizontal page scrolling.
 
 ### Phase 2 completion checks
 

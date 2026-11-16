@@ -6,6 +6,7 @@ import {
   compareExperimentToControl,
   validateCookieCount
 } from "./model/predictionRules.js";
+import { buildRecipeInstructions } from "./model/recipeInstructions.js";
 
 const app = document.querySelector("#app");
 let experiment = {
@@ -178,11 +179,20 @@ app.innerHTML = `
     </p>
   </section>
 
-  <section class="recipe-card comparison-card" aria-labelledby="comparison-title">
-    <p class="section-label">Recipe output</p>
-    <h2 id="comparison-title">Compare recipes</h2>
-    <div class="comparison-wrapper" id="recipe-comparison"></div>
-    <div class="portion" id="portion-estimate"></div>
+  <section class="recipe-card comparison-card" aria-labelledby="recipe-result-title">
+    <p class="section-label">Recipe result</p>
+    <h2 id="recipe-result-title">Use your experiment</h2>
+    <div class="recipe-tabs" role="tablist" aria-label="Recipe result views">
+      <button id="output-tab" class="recipe-tab" type="button" role="tab" aria-selected="true" aria-controls="output-panel">Recipe output</button>
+      <button id="instructions-tab" class="recipe-tab" type="button" role="tab" aria-selected="false" aria-controls="instructions-panel" tabindex="-1">Baking instructions</button>
+    </div>
+    <div id="output-panel" role="tabpanel" aria-labelledby="output-tab">
+      <h3 class="panel-title">Compare recipes</h3>
+      <div class="comparison-wrapper" id="recipe-comparison"></div>
+    </div>
+    <div id="instructions-panel" role="tabpanel" aria-labelledby="instructions-tab" hidden>
+      <div id="recipe-instructions"></div>
+    </div>
   </section>
 
   <dialog class="prediction-dialog" id="prediction-dialog" aria-label="Prediction details">
@@ -208,7 +218,8 @@ const oilTechniqueNote = app.querySelector("#oil-technique-note");
 const yieldControl = app.querySelector("#yield-control");
 const yieldError = app.querySelector("#yield-error");
 const comparisonContainer = app.querySelector("#recipe-comparison");
-const portionEstimate = app.querySelector("#portion-estimate");
+const instructionsContainer = app.querySelector("#recipe-instructions");
+const recipeTabs = [...app.querySelectorAll("[role='tab']")];
 const warningsContainer = app.querySelector("#warnings");
 const status = app.querySelector("#recipe-status");
 const cookieVisual = app.querySelector("#cookie-visual");
@@ -222,7 +233,7 @@ function formatGrams(grams) {
 }
 
 function formatRatio(ratio) {
-  return ratio.toFixed(2);
+  return ratio.toFixed(1);
 }
 
 function formatDifference(grams) {
@@ -233,7 +244,7 @@ function formatDifference(grams) {
 function renderComparison(rows) {
   comparisonContainer.innerHTML = `
     <table class="comparison-table">
-      <caption>Control and experiment ingredients at the selected yield</caption>
+      <caption>Same requested cookie count; each recipe uses its recommended method size</caption>
       <thead>
         <tr>
           <th scope="col">Ingredient</th>
@@ -269,15 +280,25 @@ function renderComparison(rows) {
   `;
 }
 
-function renderPortionEstimate(portion) {
-  portionEstimate.innerHTML = `
-    <p class="section-label">Portion estimate</p>
-    <strong>This recipe makes ${portion.cookieCount} cookies at about ${Math.round(
-      portion.gramsPerCookie
-    )} g of dough each.</strong>
-    <p>Portion with a level #24 cookie scoop onto a parchment-lined baking sheet.</p>
-    <p>Weight is estimated from the current ingredients; actual dough weight may vary.</p>
+function renderInstructions(method) {
+  instructionsContainer.innerHTML = `
+    <p class="section-label">${method.name} method</p>
+    <h3 class="panel-title">Bake ${method.cookieCount} cookies</h3>
+    <p class="instruction-summary">Recommended portion: about ${method.displayPortionGrams} g each. The ingredient amounts in Recipe output are scaled for this method.</p>
+    <ol class="instruction-list">
+      ${method.steps.map((step) => `<li>${step}</li>`).join("")}
+    </ol>
+    <p class="method-note">${method.note}</p>
   `;
+}
+
+function selectRecipeTab(tab) {
+  for (const candidate of recipeTabs) {
+    const selected = candidate === tab;
+    candidate.setAttribute("aria-selected", String(selected));
+    candidate.tabIndex = selected ? 0 : -1;
+    app.querySelector(`#${candidate.getAttribute("aria-controls")}`).hidden = !selected;
+  }
 }
 
 function renderWarnings(warnings) {
@@ -361,7 +382,7 @@ function renderCookiePreview(predictionGroups) {
 function updateExperiment(announcement) {
   const result = evaluateExperiment(experiment);
   renderComparison(compareExperimentToControl(experiment));
-  renderPortionEstimate(result.portion);
+  renderInstructions(buildRecipeInstructions(experiment));
   renderWarnings(result.warnings);
   currentPredictionGroups = result.predictionGroups;
   renderCookiePreview(result.predictionGroups);
@@ -385,6 +406,18 @@ function updateExperiment(announcement) {
   cornSyrupOutput.textContent = `${experiment.cornSyrupPercent}%`;
   oilOutput.textContent = `${experiment.oilReplacementPercent}%`;
   status.textContent = announcement;
+}
+
+for (const tab of recipeTabs) {
+  tab.addEventListener("click", () => selectRecipeTab(tab));
+  tab.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+    event.preventDefault();
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    const nextIndex = (recipeTabs.indexOf(tab) + direction + recipeTabs.length) % recipeTabs.length;
+    selectRecipeTab(recipeTabs[nextIndex]);
+    recipeTabs[nextIndex].focus();
+  });
 }
 
 predictionCallouts.addEventListener("click", (event) => {
@@ -443,7 +476,7 @@ yieldControl.addEventListener("input", () => {
   yieldControl.removeAttribute("aria-invalid");
   yieldError.textContent = "";
   experiment = { ...experiment, cookieCount };
-  updateExperiment(`Yield updated to ${cookieCount} cookies. Portion estimate updated.`);
+  updateExperiment(`Yield updated to ${cookieCount} cookies. Recipe and instructions updated.`);
 });
 
 cornSyrupControl.addEventListener("input", () => {

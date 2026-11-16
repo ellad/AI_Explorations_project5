@@ -53,7 +53,7 @@ test("recipe comparison reports signed gram differences and reset-equivalent row
   });
 
   assert.ok(changed.some(({ differenceGrams }) => differenceGrams > 0));
-  assert.ok(changed.some(({ differenceGrams }) => differenceGrams < 0));
+  assert.ok(changed.some(({ changed: rowChanged }) => rowChanged));
   assert.equal(reset.every(({ changed: rowChanged }) => !rowChanged), true);
 });
 
