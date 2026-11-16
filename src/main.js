@@ -19,25 +19,52 @@ let experiment = {
 
 app.innerHTML = `
   <header class="hero">
-    <h1>Half Baked</h1>
-    <p class="eyebrow">Experiment before you bake</p>
+    <div>
+      <h1>Half Baked</h1>
+      <p class="eyebrow">Experiment before you bake</p>
+    </div>
     <p class="intro">
       Explore how a supported ingredient change may affect a familiar chocolate-chip cookie.
     </p>
   </header>
 
-  <div class="experiment-layout">
-    <section class="recipe-card" aria-labelledby="experiment-title">
-      <div class="recipe-heading">
-        <div>
-          <p class="section-label">Recipe experiment</p>
-          <h2 id="experiment-title">Change the formula</h2>
-          <p>Flour is the 1.0 reference. Adjust another ingredient's ratio to change the formula.</p>
-        </div>
-        <button type="button" id="reset-recipe">Reset recipe</button>
+  <section class="cookie-preview" aria-labelledby="preview-title">
+    <div class="preview-heading">
+      <div>
+        <p class="section-label">Visual prediction</p>
+        <h2 id="preview-title">Your cookie experiment</h2>
       </div>
+      <p>Illustrative directions, not an exact simulation.</p>
+    </div>
+    <div class="cookie-stage">
+      <div class="callout-layer" id="prediction-callouts"></div>
+      <div class="cookie-wrap" aria-hidden="true">
+        <div class="cookie" id="cookie-visual">
+          <span class="chip chip-1"></span><span class="chip chip-2"></span>
+          <span class="chip chip-3"></span><span class="chip chip-4"></span>
+          <span class="chip chip-5"></span><span class="chip chip-6"></span>
+          <span class="chip chip-7"></span><span class="chip chip-8"></span>
+          <span class="cookie-sheen"></span>
+        </div>
+      </div>
+    </div>
+    <p class="preview-disclaimer">
+      These predictions are based on information collected from recipes and food-science sources. Actual results will vary.
+    </p>
+    <div id="warnings"></div>
+  </section>
 
-      <div class="controls" aria-describedby="supported-range-note">
+  <section class="recipe-card controls-card" aria-labelledby="experiment-title">
+    <div class="recipe-heading">
+      <div>
+        <p class="section-label">Recipe experiment</p>
+        <h2 id="experiment-title">Change the formula</h2>
+        <p>Flour is the 1.0 reference. Adjust another ingredient's ratio to change the formula.</p>
+      </div>
+      <button type="button" id="reset-recipe">Reset recipe</button>
+    </div>
+
+    <div class="controls" aria-describedby="supported-range-note">
         <div class="control-group texture-control-group">
           <div class="control-heading">
             <label for="texture-control">Texture direction</label>
@@ -53,9 +80,9 @@ app.innerHTML = `
             aria-describedby="texture-help texture-status"
           />
           <div class="texture-labels" aria-hidden="true">
-            <span>Thin and crispy</span>
-            <span>Control</span>
             <span>Dense and chewy</span>
+            <span>Control</span>
+            <span>Thin and crispy</span>
           </div>
           <p id="texture-help">Moves linked butter, sugar, egg, and baking-soda ratios together.</p>
         </div>
@@ -144,27 +171,27 @@ app.innerHTML = `
           <p id="yield-help">Enter a positive whole number.</p>
           <p class="field-error" id="yield-error" aria-live="polite"></p>
         </div>
-      </div>
+    </div>
 
-      <p class="range-note" id="supported-range-note">
-        Values outside the supported ratio ranges remain visible, but Half Baked will withhold that prediction.
-      </p>
+    <p class="range-note" id="supported-range-note">
+      Values outside the supported ratio ranges remain visible, but Half Baked will withhold that prediction.
+    </p>
+  </section>
 
-      <h3>Compare recipes</h3>
-      <div class="comparison-wrapper" id="recipe-comparison"></div>
-      <div class="portion" id="portion-estimate"></div>
-    </section>
+  <section class="recipe-card comparison-card" aria-labelledby="comparison-title">
+    <p class="section-label">Recipe output</p>
+    <h2 id="comparison-title">Compare recipes</h2>
+    <div class="comparison-wrapper" id="recipe-comparison"></div>
+    <div class="portion" id="portion-estimate"></div>
+  </section>
 
-    <section class="results-card" aria-labelledby="results-title">
-      <p class="section-label">What may change</p>
-      <h2 id="results-title">Predictions</h2>
-      <p class="disclaimer">
-        These predictions are based on information collected from recipes and food-science sources. Actual results will vary.
-      </p>
-      <div id="warnings"></div>
-      <div id="predictions"></div>
-    </section>
-  </div>
+  <dialog class="prediction-dialog" id="prediction-dialog" aria-label="Prediction details">
+    <div class="dialog-heading">
+      <p class="section-label">Prediction details</p>
+      <button class="dialog-close" id="dialog-close" type="button" aria-label="Close prediction details">×</button>
+    </div>
+    <div id="prediction-dialog-content"></div>
+  </dialog>
 
   <p class="sr-only" id="recipe-status" role="status" aria-live="polite"></p>
 `;
@@ -182,9 +209,13 @@ const yieldControl = app.querySelector("#yield-control");
 const yieldError = app.querySelector("#yield-error");
 const comparisonContainer = app.querySelector("#recipe-comparison");
 const portionEstimate = app.querySelector("#portion-estimate");
-const predictionsContainer = app.querySelector("#predictions");
 const warningsContainer = app.querySelector("#warnings");
 const status = app.querySelector("#recipe-status");
+const cookieVisual = app.querySelector("#cookie-visual");
+const predictionCallouts = app.querySelector("#prediction-callouts");
+const predictionDialog = app.querySelector("#prediction-dialog");
+const predictionDialogContent = app.querySelector("#prediction-dialog-content");
+let currentPredictionGroups = [];
 
 function formatGrams(grams) {
   return Number.isInteger(grams) ? grams : grams.toFixed(1);
@@ -262,44 +293,22 @@ function renderWarnings(warnings) {
     .join("");
 }
 
-function renderPredictions(predictionGroups) {
-  if (predictionGroups.length === 0) {
-    predictionsContainer.innerHTML = `
-      <div class="neutral-result">
-        <h3>No supported change to predict</h3>
-        <p>The recipe is at its control amounts, or a changed value is outside the model's supported range.</p>
-      </div>
-    `;
-    return;
-  }
-
-  predictionsContainer.innerHTML = `
-    <ul class="prediction-list">
-      ${predictionGroups
+function renderPredictionDetail({ quality, direction, conflict, contributors }) {
+  predictionDialogContent.innerHTML = `
+    <h2 id="prediction-dialog-title">${quality}</h2>
+    <h3>${direction}</h3>
+    ${conflict ? `<p class="conflict-summary">${conflict}</p>` : ""}
+    <ul class="contributor-list">
+      ${contributors
         .map(
-          ({ quality, direction, conflict, contributors }) => `
-            <li class="prediction">
-              <div class="prediction-heading">
-                <span>${quality}</span>
+          ({ rule, variable, direction: contributorDirection, evidence, explanation }) => `
+            <li class="contributor" data-rule="${rule}">
+              <div class="contributor-heading">
+                <strong>${variable}</strong>
+                <span class="evidence">${evidence}</span>
               </div>
-              <h3>${direction}</h3>
-              ${conflict ? `<p class="conflict-summary">${conflict}</p>` : ""}
-              <ul class="contributor-list">
-                ${contributors
-                  .map(
-                    ({ rule, variable, direction: contributorDirection, evidence, explanation }) => `
-                      <li class="contributor" data-rule="${rule}">
-                        <div class="contributor-heading">
-                          <strong>${variable}</strong>
-                          <span class="evidence">${evidence}</span>
-                        </div>
-                        ${conflict ? `<p class="contributor-direction">${contributorDirection}</p>` : ""}
-                        <p>${explanation}</p>
-                      </li>
-                    `
-                  )
-                  .join("")}
-              </ul>
+              ${conflict ? `<p class="contributor-direction">${contributorDirection}</p>` : ""}
+              <p>${explanation}</p>
             </li>
           `
         )
@@ -308,12 +317,54 @@ function renderPredictions(predictionGroups) {
   `;
 }
 
+function renderCookiePreview(predictionGroups) {
+  const directions = new Map(
+    predictionGroups.map(({ quality, direction }) => [quality, direction])
+  );
+  const spread = directions.get("Spread and thickness") ?? "";
+  const texture = directions.get("Crisp to chewy") ?? "";
+  const moisture = directions.get("Moisture") ?? "";
+
+  cookieVisual.className = "cookie";
+  if (spread.startsWith("More spread")) cookieVisual.classList.add("is-wide");
+  if (spread.startsWith("Less spread")) cookieVisual.classList.add("is-thick");
+  if (texture.includes("Crispier")) cookieVisual.classList.add("is-crisp");
+  if (texture.includes("Chewier")) cookieVisual.classList.add("is-chewy");
+  if (moisture.startsWith("More moisture")) cookieVisual.classList.add("is-moist");
+  if (moisture.startsWith("Less moisture")) cookieVisual.classList.add("is-dry");
+  if ([...directions.values()].some((direction) => direction === "Competing effects")) {
+    cookieVisual.classList.add("has-competing-effects");
+  }
+
+  const callouts = predictionGroups.length
+    ? predictionGroups
+        .map(
+          ({ quality, direction }) => `
+            <button class="prediction-callout" type="button" data-prediction-index="${predictionGroups.findIndex((group) => group.quality === quality)}" aria-haspopup="dialog">
+              <span>${quality}</span>
+              <strong>${direction}</strong>
+              <small>Read prediction</small>
+            </button>
+          `
+        )
+        .join("")
+    : `
+        <div class="prediction-callout is-control">
+          <span>Starting point</span>
+          <strong>Control recipe</strong>
+        </div>
+      `;
+
+  predictionCallouts.innerHTML = callouts;
+}
+
 function updateExperiment(announcement) {
   const result = evaluateExperiment(experiment);
   renderComparison(compareExperimentToControl(experiment));
   renderPortionEstimate(result.portion);
   renderWarnings(result.warnings);
-  renderPredictions(result.predictionGroups);
+  currentPredictionGroups = result.predictionGroups;
+  renderCookiePreview(result.predictionGroups);
   const customized =
     experiment.butterCustomized ||
     experiment.cornSyrupPercent !== 0 ||
@@ -336,8 +387,29 @@ function updateExperiment(announcement) {
   status.textContent = announcement;
 }
 
+predictionCallouts.addEventListener("click", (event) => {
+  const callout = event.target.closest("[data-prediction-index]");
+  if (!callout) return;
+  const prediction = currentPredictionGroups[Number(callout.dataset.predictionIndex)];
+  if (!prediction) return;
+  renderPredictionDetail(prediction);
+  predictionDialog.showModal();
+});
+
+app.querySelector("#dialog-close").addEventListener("click", () => predictionDialog.close());
+
+predictionDialog.addEventListener("click", (event) => {
+  const bounds = predictionDialog.getBoundingClientRect();
+  const outside =
+    event.clientX < bounds.left ||
+    event.clientX > bounds.right ||
+    event.clientY < bounds.top ||
+    event.clientY > bounds.bottom;
+  if (outside) predictionDialog.close();
+});
+
 textureControl.addEventListener("input", () => {
-  const texturePosition = Number(textureControl.value);
+  const texturePosition = -Number(textureControl.value);
   const mappedRatios = buildTextureRatios(texturePosition);
   experiment = {
     ...experiment,

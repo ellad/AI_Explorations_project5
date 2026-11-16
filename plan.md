@@ -93,6 +93,22 @@ The next few results to build, each with what it should produce and how you will
 
 **Result, 2026-11-09:** Complete. Butter ratio, corn syrup, and vegetable oil now use palette-matched range controls with persistent current values and compact labels; cookie count remains a validated number field. The butter slider shares the grouped control's 21-position piecewise mapping, increases conventionally from `0.6250` on the left through `0.7687` at center to `0.9609` on the right, and stays synchronized with grouped texture changes. Descriptive heading text was separated from value badges to prevent overlap. The portion estimate now states the standard level #24 scoop and parchment method without treating scoop volume as an exact weight conversion. The Developer passed endpoint, synchronization, keyboard, reset, prediction, comparison, portion, responsive, and focus checks. `npm test` passes all 28 tests and `npm run build` succeeds.
 
+### Phase 4, Checkpoint 1 — Dynamic cookie preview
+
+**Result:** Reorganize the interface around a central illustrated cookie whose supported visual qualities update with the current experiment. Surround it with text callouts for every applicable prediction while retaining the detailed evidence and recipe comparison below.
+
+**Tests:**
+
+- Verify the control, thin/crispy, dense/chewy, butter-only, corn-syrup, oil, combined, and competing-effect states.
+- Confirm callout wording is generated from the same grouped predictions as the detailed cards and that reset restores the neutral control preview.
+- Confirm visual treatments reinforce—but never replace—the written direction and uncertainty.
+- Check the layout at desktop and narrow widths for overlap, horizontal scrolling, readable callouts, keyboard focus, and live announcements.
+- Run all automated tests and the production build before direct Developer testing.
+
+**Stop condition:** Do not mark the visual checkpoint complete until the Developer reviews the preview directly and confirms that the changing cookie and callouts communicate the intended relationship.
+
+**Agent verification, 2026-11-16:** Implemented the prediction-led cookie stage, dynamic qualitative treatments, applicable callouts, responsive stacking, and the reorganized controls/comparison layout. Callouts now open accessible modal details containing the evidence and contributing adjustments, replacing the duplicated prediction list lower on the page. `npm test` passes all 28 tests, `npm run build` succeeds, the local Vite page returns HTTP 200, and `git diff --check` reports no whitespace errors. Direct browser review remains open because no browser or screenshot runner was available in the Agent environment.
+
 ### Checkpoint 1 — Project foundation and recipe state
 
 **Result:** A minimal Vite application loads the approved control recipe from structured JavaScript data and displays its ingredient weights. Reset restores a fresh copy of that control state.

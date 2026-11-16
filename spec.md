@@ -127,6 +127,8 @@ The User can replace 0–100% of the current formula's butter with vegetable oil
 
 The control has three named reference positions: **thin and crispy**, **control**, and **dense and chewy**. Its primary relationship is flour to butter:
 
+In the interface, **dense and chewy** is the left endpoint, **control** is the midpoint, and **thin and crispy** is the right endpoint. This direction matches the butter-ratio control, which also increases toward the right. The model retains its existing signed texture positions internally.
+
 - Thin and crispy: approximately `1.0 : 1` flour to butter. With flour fixed as the formula's `1.0` reference and the existing supported butter limit preserved, the implemented endpoint is `1 : 0.9609`, or approximately `1.04 : 1`.
 - Control midpoint: approximately `1.3 : 1`, reproducing the approved control recipe.
 - Dense and chewy: approximately `1.6 : 1`.
@@ -213,6 +215,22 @@ The table has one row per ingredient and three data columns: **Control**, **Expe
 - Because the three replacement controls cannot leave their supported ranges, their former typed-input validation is not shown in the interface. Model-level range checks remain in place for stability and automated testing.
 - Desired cookie count retains its visible inline validation and last-valid-recipe behavior.
 
+### Dynamic cookie preview and prediction callouts — Phase 4
+
+The interface uses a central illustrated cookie to make the current qualitative prediction easier to scan before the User reaches the detailed evidence.
+
+- The preview derives from the same grouped prediction result as the detailed prediction cards; it does not maintain a separate prediction model.
+- Every quality that has an applicable supported prediction appears as a visible callout. The interface does not limit the display to a fixed number of callouts.
+- Each applicable callout is a keyboard-accessible button that opens a modal detail panel containing the full prediction, conflict explanation when applicable, contributing adjustments, evidence labels, and explanations.
+- The modal closes through its labeled close button, the Escape key, or selection outside the panel; closing returns focus to the originating callout through the native dialog behavior.
+- Spread and thickness change the cookie's proportions and edge depth; crisp-to-chewy changes its edge and surface treatment; moisture changes its sheen and color treatment.
+- Competing or uncertain effects remain visibly labeled and do not produce a falsely precise visual direction.
+- The control state shows a neutral **Control recipe** callout.
+- The preview is labeled as illustrative rather than an exact simulation. Text callouts carry the prediction meaning; appearance alone is never the only output.
+- Warnings, the results-vary disclaimer, comparison table, and live announcements remain in the page. Detailed evidence labels and explanations live in the callout dialogs instead of a duplicated prediction list below the page.
+- At narrow widths, callouts stack without overlapping the cookie or causing horizontal page scrolling.
+- Reset restores the neutral control cookie and removes adjustment-specific callouts.
+
 ### Phase 2 completion checks
 
 The core is proven when the Developer verifies that:
@@ -264,10 +282,10 @@ What information the system keeps, where each piece lives, and how it moves and 
 
 How User input or other events lead to changes in state and then to what the User sees, hears, or receives.
 
-1. A User changes the butter ratio, corn syrup, or desired cookie count.
+1. A User changes the grouped texture, butter ratio, corn syrup, oil replacement, or desired cookie count.
 2. The input handler creates the next recipe state.
 3. The rule evaluator validates supported ranges and derives predictions.
-4. The interface renders ingredient amounts, warnings, prediction directions, labels, and explanations from that result.
+4. The interface renders the cookie preview, callouts, ingredient amounts, warnings, prediction directions, labels, and explanations from that result.
 5. Assistive technology receives a concise update describing what changed.
 
 ### Visual and content rules
@@ -279,6 +297,7 @@ The shared rules that establish the art style and keep the presentation consiste
 - Keep the control amount, current amount, prediction, confidence label, and explanation visually distinct.
 - Use cautious language such as “is likely to” and “may,” never “will.”
 - Keep source attribution available from each prediction or its explanation area. The exact citation interaction is provisional until the interface is designed.
+- Treat the cookie as a qualitative diagram: motion and appearance may reinforce supported directions, but callout text remains authoritative.
 
 ### Structure rules
 
@@ -301,3 +320,4 @@ Consequential structural decisions, the alternatives considered, and why you cho
 - **2026-11-06 — Qualitative output:** Predictions use directions and evidence labels instead of numeric outcome scores because the research does not support precise measurements.
 - **2026-11-06 — Conflicts remain visible:** Rules do not cancel one another into a single result. Showing each cause preserves uncertainty and makes the model explainable.
 - **2026-11-02 and 2026-11-09 — Grouped texture mapping:** The Developer approved a dense-and-chewy to thin-and-crispy axis, with the Toll House control at the midpoint; flour-to-butter reference points of approximately `1.04`, `1.3`, and `1.6`; total sugar from 125% to 75% of control; brown sugar from 45% to 70% of total sugar; one egg only at the crispy endpoint and two eggs elsewhere; and baking soda linked proportionally to brown-sugar weight. Flour stays the formula's `1.0` reference so this mapping extends the existing ratio-first structure without expanding the Phase 2 butter limit.
+- **2026-11-16 — Prediction-led visual preview:** The Developer's sketch established a large central cookie with surrounding callouts. The cookie visualization and every applicable callout derive from `predictionGroups`, keeping the overview consistent with the detailed evidence and avoiding a second visual-only rule system.
