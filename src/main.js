@@ -257,7 +257,7 @@ function renderComparison(rows) {
                   <small>Ratio ${formatRatio(current.ratio)}</small>
                 </td>
                 <td data-label="Change">
-                  <strong>${changed ? "Changed" : "No change"}</strong>
+                  <strong>${changed ? "Changed" : "Same ratio"}</strong>
                   <small>${formatDifference(differenceGrams)}</small>
                 </td>
               </tr>

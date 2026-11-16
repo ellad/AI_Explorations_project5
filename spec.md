@@ -168,7 +168,7 @@ The table has one row per ingredient and three data columns: **Control**, **Expe
 
 - Control and experiment use the same selected cookie count so the weights are directly comparable.
 - Each control and experiment cell shows grams first and the flour-relative ratio second.
-- The change cell shows the signed gram difference and a visible **Changed** label when the formulas differ; unchanged rows say **No change**.
+- The change cell shows the signed gram difference and a visible **Changed** label when the formula ratio differs; rows whose flour-relative ratio is unchanged say **Same ratio**, even if normalization slightly changes their displayed gram weights.
 - A change caused only by selecting another yield does not mark every ingredient as changed because both columns scale to that yield.
 - Corn syrup and vegetable oil appear when present in the experiment. Their control value is `0 g` and ratio `0.00`.
 - Ingredients remain in a consistent order across control and experiment states.
