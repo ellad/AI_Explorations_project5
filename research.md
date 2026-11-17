@@ -432,6 +432,15 @@ The instruction system uses three method anchors while keeping Half Baked's exis
 - **Oil override:** King Arthur's fat comparison substituted by volume and chilled portioned cookies for 30 minutes before baking. Separate King Arthur butter-and-oil cookie recipes beat softened butter, oil, and sugars together only until combined, supporting that order for Half Baked's partial replacement. This supports the mixing direction, chill requirement, and predicted direction, but not every partial-oil percentage or Half Baked's combined endpoint formulas; the method must still be tested.
 - **Corn-syrup placement:** King Arthur's chewy-cookie method beats corn syrup with butter and sugar. Half Baked therefore adds corn syrup with the sugar phase while retaining its own supported amount.
 
+### Measurement and calorie display — 2026-11-16
+
+- **Decision (Developer):** Keep grams as the recipe model's source of truth and let Users switch the Control and Experiment displays between weight and practical volume measures. Ratios do not change with the display.
+- **Decision (Developer):** Display the 294 g control flour as **2¼ cups + 2 tablespoons**, preserving the approved Toll House volume plus the nut-replacement flour rather than applying King Arthur's 120 g cup to that ingredient. Other cup and spoon conversions use the documented control values or King Arthur's ingredient chart.
+- **Decision (Developer):** Display egg quantities as whole large eggs. The reviewed Tate's-style recipes use whole eggs and do not direct bakers to add a separate yolk or white. When scaling requires part of an egg, tell the User how many whole eggs to beat and the precise gram amount to use; do not silently replace the remainder with a yolk or white.
+- **Decision (Developer):** Show estimated calories per requested cookie for both Control and Experiment. Calculate from unrounded ingredient grams; label the results as estimates because brands and finished-cookie weights vary.
+- **Calorie data:** USDA FoodData Central / SR Legacy supplies generic energy densities for flour, butter, white and brown sugar, egg, vanilla, corn syrup, and vegetable oil. Baking soda and salt contribute zero calories. The current Nestlé Toll House label supplies the brand-specific morsel value: 70 calories per 14 g (500 kcal per 100 g).
+- **Display limitation:** Volume fractions are practical rounded measures and will not reproduce the precise gram formula. Unsupported future ingredients remain displayed in grams until a conversion is researched.
+
 ### Source quality notes
 
 - **Strong for this project:** [Iowa State Extension AnswerLine](https://blogs.extension.iastate.edu/answerline/?p=10881) (Marlene Geiger, Nov 21, 2023). University extension, itemized by ingredient.
@@ -508,4 +517,6 @@ Record consequential changes to the approved scope: what changed, why, and what 
 | [Modern Honey, Levain Bakery Chocolate Chip Crush Cookies](https://www.modernhoney.com/levain-bakery-chocolate-chip-crush-cookies/), Melissa Stadler | Reference method (read) | Cold-butter dense-cookie method and large portions | Cite; no text or photos reproduced. |
 | [Scientifically Sweet, Levain Bakery Chocolate Chip Cookie Recipe](https://scientificallysweet.com/levain-bakery-chocolate-chip-cookies/), Christina Marsigliese | Reference method (read) | 125 g dense-cookie portion and home method | Cite; no text or photos reproduced. |
 | [Broma Bakery, Copycat Levain Bakery Chocolate Chip Cookies](https://bromabakery.com/copycat-levain-bakery-chocolate-chip-cookies/), Michelle Norris | Reference method (read) | Nut-free dense-cookie example and chilling alternative | Cite; no text or photos reproduced. |
+| [USDA FoodData Central](https://fdc.nal.usda.gov/) and USDA SR Legacy ingredient reports | Reference data (read) | Generic ingredient calorie densities | Public-domain factual data; identify USDA as the source. |
+| [Nestlé Toll House Semi-Sweet Chocolate Morsels](https://www.verybestbaking.com/toll-house/products/semi-sweet-chocolate-morsels-12oz/) | Manufacturer nutrition label (read) | Morsel calories: 70 kcal per 14 g | Label facts only; no text or images reproduced. |
 | Vite | Code (planned) | Dev server and build | MIT, to confirm when installed. |

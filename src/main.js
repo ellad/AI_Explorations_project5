@@ -7,6 +7,8 @@ import {
   validateCookieCount
 } from "./model/predictionRules.js";
 import { buildRecipeInstructions } from "./model/recipeInstructions.js";
+import { formatIngredientAmount } from "./model/recipeMeasurements.js";
+import { estimateRecipeCalories } from "./model/recipeNutrition.js";
 
 const app = document.querySelector("#app");
 let experiment = {
@@ -17,6 +19,7 @@ let experiment = {
   oilReplacementPercent: 0,
   cookieCount: 24
 };
+let measurementUnit = "weight";
 
 app.innerHTML = `
   <header class="hero">
@@ -187,7 +190,15 @@ app.innerHTML = `
       <button id="instructions-tab" class="recipe-tab" type="button" role="tab" aria-selected="false" aria-controls="instructions-panel" tabindex="-1">Baking instructions</button>
     </div>
     <div id="output-panel" role="tabpanel" aria-labelledby="output-tab">
-      <h3 class="panel-title">Compare recipes</h3>
+      <div class="output-heading">
+        <h3 class="panel-title">Compare recipes</h3>
+        <fieldset class="measurement-toggle">
+          <legend>Ingredient units</legend>
+          <label><input type="radio" name="measurement-unit" value="weight" checked> Weight</label>
+          <label><input type="radio" name="measurement-unit" value="volume"> Volume</label>
+        </fieldset>
+      </div>
+      <div id="calorie-comparison"></div>
       <div class="comparison-wrapper" id="recipe-comparison"></div>
     </div>
     <div id="instructions-panel" role="tabpanel" aria-labelledby="instructions-tab" hidden>
@@ -218,6 +229,7 @@ const oilTechniqueNote = app.querySelector("#oil-technique-note");
 const yieldControl = app.querySelector("#yield-control");
 const yieldError = app.querySelector("#yield-error");
 const comparisonContainer = app.querySelector("#recipe-comparison");
+const calorieContainer = app.querySelector("#calorie-comparison");
 const instructionsContainer = app.querySelector("#recipe-instructions");
 const recipeTabs = [...app.querySelectorAll("[role='tab']")];
 const warningsContainer = app.querySelector("#warnings");
@@ -256,15 +268,15 @@ function renderComparison(rows) {
       <tbody>
         ${rows
           .map(
-            ({ name, control, experiment: current, differenceGrams, changed }) => `
+            ({ id, name, control, experiment: current, differenceGrams, changed }) => `
               <tr class="${changed ? "is-changed" : ""}">
                 <th scope="row">${name}</th>
                 <td data-label="Control">
-                  <strong>${formatGrams(control.grams)} g</strong>
+                  <strong>${formatIngredientAmount(id, control.grams, measurementUnit)}</strong>
                   <small>Ratio ${formatRatio(control.ratio)}</small>
                 </td>
                 <td data-label="Experiment">
-                  <strong>${formatGrams(current.grams)} g</strong>
+                  <strong>${formatIngredientAmount(id, current.grams, measurementUnit)}</strong>
                   <small>Ratio ${formatRatio(current.ratio)}</small>
                 </td>
                 <td data-label="Change">
@@ -277,6 +289,25 @@ function renderComparison(rows) {
           .join("")}
       </tbody>
     </table>
+  `;
+}
+
+function renderCalories(result) {
+  const control = evaluateExperiment({ cookieCount: result.portion.cookieCount });
+  const controlCalories = estimateRecipeCalories(control.recipe, result.portion.cookieCount);
+  const experimentCalories = estimateRecipeCalories(result.recipe, result.portion.cookieCount);
+  calorieContainer.innerHTML = `
+    <div class="calorie-summary" aria-label="Estimated calories">
+      <div>
+        <span>Control estimate</span>
+        <strong>${controlCalories.perCookie} calories per cookie</strong>
+      </div>
+      <div>
+        <span>Experiment estimate</span>
+        <strong>${experimentCalories.perCookie} calories per cookie</strong>
+      </div>
+    </div>
+    <p class="calorie-note">Estimates use ingredient weights; brands and finished cookies may vary.</p>
   `;
 }
 
@@ -382,6 +413,7 @@ function renderCookiePreview(predictionGroups) {
 function updateExperiment(announcement) {
   const result = evaluateExperiment(experiment);
   renderComparison(compareExperimentToControl(experiment));
+  renderCalories(result);
   renderInstructions(buildRecipeInstructions(experiment));
   renderWarnings(result.warnings);
   currentPredictionGroups = result.predictionGroups;
@@ -406,6 +438,14 @@ function updateExperiment(announcement) {
   cornSyrupOutput.textContent = `${experiment.cornSyrupPercent}%`;
   oilOutput.textContent = `${experiment.oilReplacementPercent}%`;
   status.textContent = announcement;
+}
+
+for (const unitControl of app.querySelectorAll("[name='measurement-unit']")) {
+  unitControl.addEventListener("change", () => {
+    measurementUnit = unitControl.value;
+    renderComparison(compareExperimentToControl(experiment));
+    status.textContent = `Ingredient amounts shown by ${measurementUnit}.`;
+  });
 }
 
 for (const tab of recipeTabs) {
